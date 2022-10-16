@@ -1,0 +1,31 @@
+<% content_for :header do %>
+  <h1>Clean new chapter</h1>
+<% end %>
+<div class="px-4">
+  <h2><%= @book.tl_title %></h2>
+  <%= form_with model: [@book, @corrupt_chapter] do |form| %>
+    <div class="container mb-4">
+      <div class="row mb-2 justify-content-start">
+        <div class="col-auto">
+          <div class="form-floating mb-3">
+            <%= form.number_field :ch_number, {step: 1, class: 'form-control', placeholder: 0} %>
+            <%= form.label :ch_number, "Chapter number" %>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-lg-10">
+          <div class="form-floating mb-3">
+            <%= form.text_area :og_text, {class: 'form-control', placeholder: 'chinese text', style: 'height: 200px'} %>
+            <%= form.label :og_text, "JJWXC chapter text" %>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-auto">
+          <%= form.submit class: 'form-control btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,26 @@
+<% content_for :nav do %>
+  <%= render 'chapters/nav_top' %>
+<% end %>
+<div class="container px-2">
+  <h1 class="text-center"><%= @book.tl_title %></h1>
+  <h2 class="text-muted text-center"><%= @book.og_title %></h2>
+  <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
+
+  <p><%= simple_format(@book.description) %></p>
+
+  <ul>
+    <% @chapters.each do |chapter| %>
+      <li>
+        <a href="<%= book_chapter_path(@book, chapter) %>">
+          <%= chapter.pretty_title %>
+        </a>
+      </li>
+    <% end %>
+    <li>
+      <%= link_to "Add chapter", new_book_chapter_path(@book) %>
+    </li>
+  </ul>
+
+  <%= link_to "All Books", root_path %>
+  <%= link_to "Edit", edit_book_path %>
+</div>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Clean Blog - Start Bootstrap Theme</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    </head>
+    <body style="padding-top: 60px;">
+        <!-- Navigation-->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+          <%= link_to "All Books", root_path, class: 'navbar-brand' %>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+              <%= yield :nav %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+        <!-- Main Content-->
+        <div class="container px-2">
+          <% if flash[:undo_success] %>
+            <div class="alert alert-success alert-dismissible col-auto">
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              Successfully undid: <%= flash[:undo_success].html_safe %>
+            </div>
+          <% end %>
+          <% if flash[:undo_failure] %>
+            <div class="alert alert-secondary alert-dismissible">
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              <%= simple_format(flash[:undo_failure]) %>
+            </div>
+          <% end %>
+          <%= yield %>
+
+        </div>
+
+        <div class="container px-4 px-lg-5 py-3">
+            <div class="row gx-4 gx-lg-5 py-3 justify-content-center">
+            </div>
+        </div>
+        <!-- Footer-->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2022</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

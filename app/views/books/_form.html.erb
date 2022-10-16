@@ -1,0 +1,45 @@
+<%= form_with model: @book do |form| %>
+  <div class="container">
+    <div class="row justify-content-start mb-2">
+      <div class="col-md-6">
+        <div class="form-floating mb-3">
+          <%= form.text_field :og_title, {class: 'form-control', placeholder: 'Chinese title'} %>
+          <%= form.label :og_title, "Original title" %>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-floating mb-3">
+          <%= form.text_field :tl_title, {class: 'form-control', placeholder: 'English title'} %>
+          <%= form.label :tl_title, "Translated title" %>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-floating mb-3">
+          <%= form.text_field :author_cn_name, {class: 'form-control', placeholder: 'author name'} %>
+          <%= form.label :author_cn_name, "Author" %>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-floating mb-3">
+          <%= form.text_field :short_name, {class: 'form-control', style: 'text-transform: uppercase', placeholder: 'SHORTNAME'} %>
+          <%= form.label :short_name, "Abbreviation" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-8">
+        <div class="form-floating mb-3">
+          <%= form.text_area :description, {class: 'form-control', placeholder: 'description', style: 'height: 200px'} %>
+          <%= form.label :description %>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-auto">
+        <%= form.submit class: 'form-control btn btn-primary'%>
+      </div>
+    </div>
+  </div>
+<% end %>

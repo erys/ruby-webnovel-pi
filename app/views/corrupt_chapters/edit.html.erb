@@ -1,0 +1,60 @@
+<% content_for :nav do %>
+  <%= render 'chapters/nav_top' %>
+<% end %>
+<div class="container px-2 col-xl-11">
+  <h1>Clean chapter <%= @corrupt_chapter.ch_number %></h1>
+  <div class="row">
+    <div class="col-md-6 mb-1">
+      <h2>
+        Excerpt
+        <small class="text-muted"><%= @corrupt_chapter.percent %>% <%= @current_char.occurrences %> occurrences</small>
+      </h2>
+      <%= simple_format(@excerpt, sanitize: false) %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <div class="container">
+        <%= form_with model: [@book, @corrupt_chapter] do |form| %>
+          <div class="row justify-content-between mb-2">
+            <div class="col-auto">
+              <div class="hstack">
+                <%=# form.submit "Replace", {-->
+                  # class: 'form-control btn btn-primary clipboard-btn',
+                  # 'data-clipboard-action' => "copy",
+                  # 'data-clipboard-text' => @corrupt_chapter.next_bytes,
+                   #}
+                %>
+                <span class="text-primary text-nowrap">Last replaced:
+                  <strong><%= @corrupt_chapter.prev_char&.correct_char || 'none' %></strong></span>
+              <% if @corrupt_chapter.can_undo? %>
+                  <%= form.submit "Undo", {
+                    formaction: undo_book_corrupt_chapter_path,
+                    class: 'form-control btn btn-secondary clipboard-btn mx-2',
+                    'data-clipboard-action' => "copy",
+                    'data-clipboard-text' => @corrupt_chapter.prev_bytes,
+                  } %>
+                  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+              <% end %>
+            </div>
+          </div>
+            <div class="col-auto">
+              <div class="btn btn-info clipboard-btn" data-clipboard-action="copy" data-clipboard-text="<%= @current_char.og_bytes %>">
+                Copy bytes
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap">
+            <% @corrupt_chapter.unused_chars.each do |char| %>
+              <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn',
+                             'data-clipboard-action' => "copy",
+                             'data-clipboard-text' => @corrupt_chapter.next_bytes %>
+            <% end %>
+            <%#= form.collection_radio_buttons(:replacement, @corrupt_chapter.unused_chars, :to_s, :to_s) do |b| %>
+              <%#= b.radio_button(class: "btn-check", checked: "") %>
+              <%#= b.label(class: "btn btn-outline-info") %>
+            <%# end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

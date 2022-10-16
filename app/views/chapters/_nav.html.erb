@@ -1,0 +1,23 @@
+<nav>
+	<ul class="nav nav-fill pt-4">
+		<li class="nav-item justify-content-left">
+			<%= link_to "Previous", book_chapter_path(@book, @previous), class: 'nav-link' if @previous %>
+		</li>
+		<li class="nav-item">
+			<%= link_to "TOC", book_path(@book), class: 'nav-link' %>
+		</li>
+		<li class="nav-item">
+			<%= link_to "Edit", edit_book_chapter_path, class: 'nav-link' %>
+		</li>
+		<li class="nav-item">
+			<% if @next %>
+			<%= link_to "Next", book_chapter_path(@book, @next), class: 'nav-link' %>
+			<%else %>
+			<%= link_to "Add chapter", new_book_chapter_path(@book), class: 'nav-link' %>
+				</li>
+				<li class="nav-item">
+					<%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: 'nav-link' %>
+			<% end %>
+		</li>
+	</ul>
+</nav>

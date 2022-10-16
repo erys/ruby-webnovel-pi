@@ -1,0 +1,15 @@
+<% content_for :nav do %>
+	<%= render 'nav_top' %>
+<% end %>
+<h2>
+	<%= @chapter.pretty_title %>
+</h2>
+<%= render 'nav' %>
+<article>
+		<div class="row gx-4 gx-lg-5 justify-content-center">
+			<div class="col-md-11 col-lg-10 col-xl-9">
+				<p><%= simple_format(@chapter.tl_text_data) %></p>
+			</div>
+		</div>
+</article>
+<%= render 'nav' %>

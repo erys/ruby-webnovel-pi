@@ -1,10 +1,13 @@
 <% content_for :header do %>
   <h1>Clean new chapter</h1>
 <% end %>
+<% content_for :nav do %>
+  <%= render 'nav_top' %>
+<% end %>
 <div class="px-4">
   <h2><%= @book.tl_title %></h2>
   <%= form_with model: [@book, @corrupt_chapter] do |form| %>
-    <div class="container mb-4">
+    <div class="container mb-4 px-lg-5">
       <div class="row mb-2 justify-content-start">
         <div class="col-auto">
           <div class="form-floating mb-3">
@@ -14,9 +17,9 @@
         </div>
       </div>
       <div class="row mb-2">
-        <div class="col-lg-10">
+        <div class="col-12">
           <div class="form-floating mb-3">
-            <%= form.text_area :og_text, {class: 'form-control', placeholder: 'chinese text', style: 'height: 200px'} %>
+            <%= form.text_area :og_text, {class: 'form-control', placeholder: 'chinese text', style: 'height: 300px'} %>
             <%= form.label :og_text, "JJWXC chapter text" %>
           </div>
         </div>

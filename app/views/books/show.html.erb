@@ -2,24 +2,23 @@
   <%= render 'chapters/nav_top' %>
 <% end %>
 <div class="container px-2">
-  <h1 class="text-center"><%= @book.tl_title %></h1>
-  <h2 class="text-muted text-center"><%= @book.og_title %></h2>
-  <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
+  <div class="row mb-2">
+    <h1 class="text-center"><%= @book.tl_title %></h1>
+    <h2 class="text-muted text-center"><%= @book.og_title %></h2>
+    <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
 
-  <p><%= simple_format(@book.description) %></p>
-
-  <ul>
-    <% @chapters.each do |chapter| %>
-      <li>
-        <a href="<%= book_chapter_path(@book, chapter) %>">
-          <%= chapter.pretty_title %>
-        </a>
-      </li>
-    <% end %>
-    <li>
-      <%= link_to "Add chapter", new_book_chapter_path(@book) %>
-    </li>
-  </ul>
+    <div class="col-lg-8">
+    <p><%= simple_format(@book.description) %></p>
+  </div>
+    <div class="col-lg-4">
+      <div class="list-group list-group-flush">
+        <% @chapters.each do |chapter| %>
+          <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: "list-group-item list-group-item-action" %>
+        <% end %>
+        <%= link_to "Add chapter", new_book_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
+      </div>
+    </div>
+  </div>
 
   <%= link_to "All Books", root_path %>
   <%= link_to "Edit", edit_book_path %>

@@ -2,14 +2,14 @@
   <%= render 'nav_top' %>
 <% end %>
   <div class="row justify-content-between align-items-center">
-    <div class="col-auto">
+    <div class="col-lg-6">
       <h1 class="mt-1">Edit Chapter</h1>
     </div>
-    <div class="col-auto">
+    <div class="col-lg-6">
       <div class="hstack">
         <%= link_to 'Clean another', new_book_corrupt_chapter_path(@book), {class: 'btn btn-info me-2 text-nowrap'} if flash[:last_action] == 'clean'  %>
         <%= link_to 'Cancel', book_chapter_path(@book, @chapter), {class: 'btn btn-secondary me-2'}%>
-        <input type='submit', value='Save', class='form-control btn btn-success' form='chapter_create_edit_form'>
+        <input type='submit' value='Save' class='form-control btn btn-success' form='chapter_create_edit_form'>
       </div>
     </div>
   </div>

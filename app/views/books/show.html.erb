@@ -11,11 +11,16 @@
     <p><%= simple_format(@book.description) %></p>
   </div>
     <div class="col-lg-4" style="max-height: 400px">
-      <div class="list-group list-group-flush mh-100" style="overflow-y: auto">
-        <% @chapters.each do |chapter| %>
-          <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: "list-group-item list-group-item-action" %>
+      <div class="list-group mh-100" style="overflow-y: auto">
+        <% @chapters.each_with_index do |chapter, i| %>
+          <% classes = "list-group-item border-start list-group-item-action" %>
+          <% classes += " rounded-top" if i == 0 %>
+          <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
         <% end %>
-        <%= link_to "Add chapter", new_book_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
+        <div class="clearfix split-items">
+          <%= link_to "Add chapter", new_book_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info left-side" %>
+          <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-primary right-side" %>
+        </div>
       </div>
     </div>
   </div>

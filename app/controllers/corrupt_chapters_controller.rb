@@ -88,7 +88,7 @@ class CorruptChaptersController < ApplicationController
 
   private
   def corrupt_chapter_params
-    params.require(:corrupt_chapter).permit(:og_text, :ch_number)
+    params.require(:corrupt_chapter).permit(:og_text, :ch_number, :subtitle)
   end
 
   def update_params

@@ -15,7 +15,8 @@ class CorruptChapter
 		:possible_chars,
 		:corrupt_chars_json,
 		:parsed,
-		:id
+		:id,
+		:subtitle,
 	].freeze
 
 	JSON_SYMBOLS = [
@@ -27,6 +28,7 @@ class CorruptChapter
 		:possible_chars,
 		:parsed,
 		:id,
+		:subtitle,
 	].freeze
 
 	attr_accessor *ATTR_SYMBOLS
@@ -152,6 +154,7 @@ class CorruptChapter
 		chapter = Chapter.new(book_id: book_id, ch_number: ch_number)
 		chapter.og_text_data = og_text
 		chapter.og_title = og_text.lines.first.strip.force_encoding('utf-8')
+		chapter.og_subtitle = subtitle if subtitle.present?
 		chapter
 	end
 

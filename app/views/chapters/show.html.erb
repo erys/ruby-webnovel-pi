@@ -4,13 +4,13 @@
 <h2>
 	<%= @chapter.pretty_title %>
 </h2>
+<% if @chapter.tl_subtitle %>
+	<h3>
+		<small class="text-muted"><%= @chapter.tl_subtitle %></small>
+	</h3>
+<% end %>
 <%= render 'nav' %>
 <article>
-	<% if @chapter.tl_subtitle %>
-		<h3>
-			<small class="text-muted"><%= @chapter.tl_subtitle %></small>
-		</h3>
-	<% end %>
 		<div class="row gx-4 gx-lg-5 justify-content-center">
 			<div class="col-md-11 col-lg-10 col-xl-9">
 				<p><%= simple_format(@chapter.tl_text_data) %></p>

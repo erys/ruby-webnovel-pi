@@ -25,6 +25,11 @@
     </div>
   </div>
 
+  <%= link_to "Delete Book", book_path(@book), class: "btn btn-danger", data: {
+    turbo_method: :delete,
+    turbo_confirm: "Are you sure you want to delete #{@book.tl_title}? This will also delete #{@chapters.size} chapter(s) and cannot be undone"
+  } %>
+
   <%= link_to "All Books", root_path %>
   <%= link_to "Edit", edit_book_path %>
 </div>

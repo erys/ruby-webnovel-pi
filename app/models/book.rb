@@ -26,9 +26,11 @@
 #  author_id  (author_id => authors.id)
 #
 class Book < ApplicationRecord
+  include Comparable
+
   belongs_to :author
-  has_many :chapters
-  has_many :character_occurrences
+  has_many :chapters, dependent: :destroy
+  has_many :character_occurrences, dependent: :destroy
 
   after_create :create_occurrences
 
@@ -46,6 +48,14 @@ class Book < ApplicationRecord
 
   def new_chapter_number
     (latest_chapter&.ch_number || 0) + 1
+  end
+
+  def sortable_title
+    tl_title.gsub(/^(A|An|The) /i, "")
+  end
+
+  def <=>(other)
+    sortable_title.casecmp(other.sortable_title)
   end
 
   private

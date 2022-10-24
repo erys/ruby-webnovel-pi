@@ -1,6 +1,6 @@
 class BooksController < ApplicationController
   def index
-    @books = Book.all
+    @books = Book.all.sort
   end
 
   def new
@@ -38,6 +38,12 @@ class BooksController < ApplicationController
     end
     @book.update!(book_params)
     redirect_to @book
+  end
+
+  def destroy
+    @book = Book.find_by(short_name: params[:short_name])
+    @book.destroy
+    redirect_to root_path
   end
 
   private

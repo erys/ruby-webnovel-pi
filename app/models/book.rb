@@ -2,7 +2,7 @@
 #
 # Table name: books
 #
-#  id             :integer          not null, primary key
+#  id             :bigint           not null, primary key
 #  description    :text
 #  og_source      :string
 #  og_source_link :string
@@ -23,7 +23,7 @@
 #
 # Foreign Keys
 #
-#  author_id  (author_id => authors.id)
+#  fk_rails_...  (author_id => authors.id)
 #
 class Book < ApplicationRecord
   include Comparable

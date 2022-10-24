@@ -2,13 +2,15 @@
 #
 # Table name: chapters
 #
-#  id         :bigint           not null, primary key
-#  ch_number  :integer
-#  og_title   :string
-#  tl_title   :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  book_id    :integer          not null
+#  id          :bigint           not null, primary key
+#  ch_number   :integer
+#  og_subtitle :string
+#  og_title    :string
+#  tl_subtitle :string
+#  tl_title    :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  book_id     :integer          not null
 #
 # Indexes
 #

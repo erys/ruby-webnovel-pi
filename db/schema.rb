@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_13_233528) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_24_005043) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -70,6 +73,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_13_233528) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "book_id", null: false
+    t.string "og_subtitle"
+    t.string "tl_subtitle"
     t.index ["book_id", "ch_number"], name: "index_chapters_on_book_id_and_ch_number", unique: true
     t.index ["book_id"], name: "index_chapters_on_book_id"
   end

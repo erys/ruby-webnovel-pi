@@ -1,11 +1,18 @@
 <%= form_with model: [book, chapter], url: [book, chapter], id: 'chapter_create_edit_form' do |form| %>
   <div class="container">
     <div class="row justify-content-start mb-2">
-      <div class="col-md">
+      <div class="col">
         <div class="form-floating mb-3">
           <%= form.number_field :ch_number, {step: 1, class: 'form-control', placeholder: 0} %>
           <%= form.label :ch_number, "Chapter number" %>
         </div>
+      </div>
+
+      <div class="col d-md-none">
+        <button type=button class="btn btn-outline-info toggle-button" data-bs-toggle="collapse"
+                data-bs-target="#subtitle_fields" aria-expanded="false" aria-controls="subtitle_fields">
+          Add subtitle
+        </button>
       </div>
 
       <div class="col-md-5">
@@ -19,6 +26,20 @@
         <div class="form-floating mb-3">
           <%= form.text_field :tl_title, {class: 'form-control', placeholder: 'English title'} %>
           <%= form.label :tl_title, "Translated title" %>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-2 collapse d-md-block" id="subtitle_fields">
+      <div class="col-md-6">
+        <div class="form-floating mb-3">
+          <%= form.text_field :og_subtitle, {class: 'form-control', placeholder: 'og subtitle'} %>
+          <%= form.label :og_subtitle, "Chinese subtitle" %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating mb-3">
+          <%= form.text_field :tl_subtitle, {class: 'form-control', placeholder: 'tl subtitle'} %>
+          <%= form.label :tl_subtitle, "Translated subtitle" %>
         </div>
       </div>
     </div>

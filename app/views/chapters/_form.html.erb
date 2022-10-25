@@ -17,22 +17,15 @@
       </div>
 
       <div class="col-md-5">
-        <%#= form.copy_paste_float_text_field :tl_title, 'Translated title', class: %w(mb-3) %>
         <%= form.floating_label_text_field :tl_title, 'Translated title', {class: %w(mb-3)} %>
       </div>
     </div>
     <div class="row mb-2 collapse d-md-flex" id="subtitle_fields">
       <div class="col-md-6">
-        <div class="form-floating mb-3">
-          <%= form.text_field :og_subtitle, {class: 'form-control', placeholder: 'og subtitle'} %>
-          <%= form.label :og_subtitle, "Chinese subtitle" %>
-        </div>
+        <%= form.copy_paste_float_text_field :og_subtitle, 'Chinese subtitle', {class: %w(mb-3)}  %>
       </div>
       <div class="col-md-6">
-        <div class="form-floating mb-3">
-          <%= form.text_field :tl_subtitle, {class: 'form-control', placeholder: 'tl subtitle'} %>
-          <%= form.label :tl_subtitle, "Translated subtitle" %>
-        </div>
+        <%= form.copy_paste_float_text_field :tl_subtitle, 'Translated subtitle', {class: %w(mb-3)}  %>
       </div>
     </div>
     <div class="row mb-2">
@@ -42,7 +35,7 @@
             <%= form.label :og_text_data, "Chinese Text" %>
           </div>
           <div class="col-auto">
-            <%= copy_paste_group '#chapter_og_text_data', btn_classes: %w(btn-sm)%>
+            <%= copy_paste_group "#" + form.field_id(:og_text_data), btn_classes: %w(btn-sm)%>
           </div>
 
         </div>
@@ -55,7 +48,7 @@
         <%= form.label :tl_text_data, "Translated Text" %>
           </div>
           <div class="col-auto">
-            <%= copy_paste_group '#chapter_tl_text_data', btn_classes: %w(btn-sm) %>
+            <%= copy_paste_group '#' + form.field_id(:tl_text_data), btn_classes: %w(btn-sm) %>
           </div>
         </div>
         <%= form.text_area :tl_text_data, {class: 'form-control', rows: 20 }%>

@@ -1,14 +1,11 @@
-<%= form_with model: [book, chapter], url: [book, chapter], id: 'chapter_create_edit_form' do |form| %>
+<%= nice_form_with model: [book, chapter], url: [book, chapter], id: 'chapter_create_edit_form', builder: NiceFormBuilder do |form| %>
   <div class="container">
     <div class="row justify-content-start mb-2">
       <div class="col">
-        <div class="form-floating mb-3">
-          <%= form.number_field :ch_number, {step: 1, class: 'form-control', placeholder: 0} %>
-          <%= form.label :ch_number, "Chapter number" %>
-        </div>
+        <%= form.ch_number_field class: %w(mb-3) %>
       </div>
 
-      <div class="col d-md-none">
+      <div class="col-auto d-md-none mb-3 align-self-center">
         <button type=button class="btn btn-outline-info toggle-button" data-bs-toggle="collapse"
                 data-bs-target="#subtitle_fields" aria-expanded="false" aria-controls="subtitle_fields">
           Add subtitle
@@ -16,17 +13,12 @@
       </div>
 
       <div class="col-md-5">
-        <div class="form-floating mb-3">
-          <%= form.text_field :og_title, {class: 'form-control', placeholder: 'Chinese title'} %>
-          <%= form.label :og_title, "Original title" %>
-        </div>
+          <%= form.floating_label_text_field :og_title, "Original title", class: %w(mb-3) %>
       </div>
 
       <div class="col-md-5">
-        <div class="form-floating mb-3">
-          <%= form.text_field :tl_title, {class: 'form-control', placeholder: 'English title'} %>
-          <%= form.label :tl_title, "Translated title" %>
-        </div>
+        <%#= form.copy_paste_float_text_field :tl_title, 'Translated title', class: %w(mb-3) %>
+        <%= form.floating_label_text_field :tl_title, 'Translated title', {class: %w(mb-3)} %>
       </div>
     </div>
     <div class="row mb-2 collapse d-md-flex" id="subtitle_fields">
@@ -50,9 +42,7 @@
             <%= form.label :og_text_data, "Chinese Text" %>
           </div>
           <div class="col-auto">
-            <div class="clipboard-btn btn btn-sm btn-info" data-clipboard-action="copy" data-clipboard-target="#chapter_og_text_data">
-              Copy chinese text
-            </div>
+            <%= copy_paste_group '#chapter_og_text_data', btn_classes: %w(btn-sm)%>
           </div>
 
         </div>
@@ -65,9 +55,7 @@
         <%= form.label :tl_text_data, "Translated Text" %>
           </div>
           <div class="col-auto">
-            <div class="paste-btn btn btn-sm btn-info" paste-target="#chapter_tl_text_data">
-              Paste English Text
-            </div>
+            <%= copy_paste_group '#chapter_tl_text_data', btn_classes: %w(btn-sm) %>
           </div>
         </div>
         <%= form.text_area :tl_text_data, {class: 'form-control', rows: 20 }%>

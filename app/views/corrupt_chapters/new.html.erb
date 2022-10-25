@@ -6,33 +6,25 @@
 <% end %>
 <div class="px-4">
   <h2><%= @book.tl_title %></h2>
-  <%= form_with model: [@book, @corrupt_chapter] do |form| %>
+  <%= form_with model: [@book, @corrupt_chapter], builder: NiceFormBuilder do |form| %>
     <div class="container mb-4 px-lg-5">
-      <div class="row justify-content-between">
-        <div class="col-auto">
-          <div class="form-floating mb-3">
-            <%= form.number_field :ch_number, {step: 1, class: 'form-control', placeholder: 0} %>
-            <%= form.label :ch_number, "Chapter number" %>
-          </div>
+      <div class="row justify-content-between d-flex flex-row">
+        <div class="col col-md-2">
+          <%= form.ch_number_field class: %w(mb-3) %>
         </div>
-        <div class="col-auto align-self-center">
-          <div class="paste-btn btn btn-info" paste-target="#corrupt_chapter_og_text">
-            Paste JJWXC Text
-          </div>
+        <div class="col-auto order-md-last align-self-center">
+          <%= paste_button('#corrupt_chapter_og_text', text: 'Paste JJWXC Text', classes: %w(btn-info mb-3)) %>
         </div>
-        <div class="col">
-          <div class="form-floating mb-3">
-            <%= form.text_field :subtitle, class: 'form-control', placeholder: 'subtitle' %>
-            <%= form.label :subtitle, "Chapter subtitle" %>
+        <div class="col-12 col-md mb-3">
+          <div class="input-group">
+            <%= form.floating_label_text_field :subtitle, "Chapter subtitle" %>
+            <%= paste_button('#corrupt_chapter_subtitle', classes: %w(btn-info), tag_name: :button) %>
           </div>
         </div>
       </div>
       <div class="row mb-2">
         <div class="col-12">
-          <div class="form-floating mb-3">
-            <%= form.text_area :og_text, {class: 'form-control', placeholder: 'chinese text', style: 'height: 300px'} %>
-            <%= form.label :og_text, "JJWXC chapter text" %>
-          </div>
+          <%= form.floating_label_text_area :og_text, "JJWXC chapter text", {style: 'height: 300px'}, {class: %w(mb-3)} %>
         </div>
       </div>
       <div class="row">

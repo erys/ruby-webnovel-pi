@@ -35,7 +35,7 @@
             <%= form.label :og_text_data, "Chinese Text" %>
           </div>
           <div class="col-auto">
-            <%= copy_paste_group "#" + form.field_id(:og_text_data), btn_classes: %w(btn-sm)%>
+            <%= copy_paste_group form.hash_id(:og_text_data), btn_classes: %w(btn-sm)%>
           </div>
 
         </div>
@@ -48,7 +48,7 @@
         <%= form.label :tl_text_data, "Translated Text" %>
           </div>
           <div class="col-auto">
-            <%= copy_paste_group '#' + form.field_id(:tl_text_data), btn_classes: %w(btn-sm) %>
+            <%= copy_paste_group form.hash_id(:tl_text_data), btn_classes: %w(btn-sm) %>
           </div>
         </div>
         <%= form.text_area :tl_text_data, {class: 'form-control', rows: 20 }%>

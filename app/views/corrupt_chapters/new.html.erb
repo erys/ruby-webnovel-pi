@@ -6,7 +6,7 @@
 <% end %>
 <div class="px-4">
   <h2><%= @book.tl_title %></h2>
-  <%= form_with model: [@book, @corrupt_chapter], builder: NiceFormBuilder do |form| %>
+  <%= nice_form_with model: [@book, @corrupt_chapter] do |form| %>
     <div class="container mb-4 px-lg-5">
       <div class="row justify-content-between d-flex flex-row">
         <div class="col col-md-2">

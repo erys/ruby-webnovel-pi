@@ -1,24 +1,29 @@
 module CopyPasteHelper
-  def paste_button(target, text: 'Paste', classes: [], tag_name: :div)
+  def paste_button(target, text: 'Paste', classes: [], tag_name: :div, is_submit: false)
     classes = classes.union(%w(paste-btn btn))
-    if tag_name == :div
-      tag.div text, class: classes, 'paste-target': target
-    elsif tag_name == :button
-      tag.button text, class: classes, 'paste-target': target, type: 'button'
-    else
-      tag.send(tag_name, text, class: classes, 'paste-target': target)
-    end
+    copy_or_paste_button(tag_name, text, classes, attrs: {'paste-target': target}, is_submit: is_submit)
   end
 
-  def copy_button(target, text: 'Copy', classes: [], tag_name: :div)
+  def copy_button(target, text: 'Copy', classes: [], tag_name: :div, is_submit: false)
     classes = classes.union(%w(btn clipboard-btn))
     data_attrs = {'data-clipboard-action': 'copy', 'data-clipboard-target': target}
+    copy_or_paste_button(tag_name, text, classes, attrs: data_attrs, is_submit: is_submit)
+  end
+
+  def copy_text_button(copy_text, label_text: "Copy", classes: [], tag_name: :div, is_submit: false)
+    classes = classes.union(%w(btn clipboard-btn))
+    data_attrs = {'data-clipboard-action': 'copy', 'data-clipboard-text': copy_text}
+    copy_or_paste_button(tag_name, label_text, classes, attrs: data_attrs, is_submit: is_submit)
+  end
+
+  def copy_or_paste_button(tag_name, text, classes, is_submit: false, attrs: {})
     if tag_name == :div
-      tag.div text, class: classes, **data_attrs
+      tag.div text, class: classes, **attrs
     elsif tag_name == :button
-      tag.button text, class: classes, **data_attrs, type: 'button'
+      attrs.merge(type: 'button') unless is_submit
+      tag.button text, class: classes, **attrs
     else
-      tag.send(tag_name, text, class: classes, **data_attrs)
+      tag.send(tag_name, text, class: classes, **attrs)
     end
   end
 

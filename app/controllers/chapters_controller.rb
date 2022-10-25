@@ -1,9 +1,7 @@
 class ChaptersController < ApplicationController
   def show
     @book = Book.find_by(short_name: params[:book_short_name])
-    @chapter = @book.chapters.find { |chapter| chapter.ch_number.to_s == params[:ch_number] }
-    @previous = @chapter.previous
-    @next = @chapter.next
+    init_chapters
   end
 
   def new
@@ -26,22 +24,18 @@ class ChaptersController < ApplicationController
     end
   end
 
-  def clean
-    @book = Book.find_by(short_name: params[:book_short_name])
-    @occurrences = CharacterOccurrence.where(book: @book).sort
-  end
-
   def delete
   end
 
   def edit
     @book = Book.find_by(short_name: params[:book_short_name])
-    @chapter = @book.chapters.find { |chapter| chapter.ch_number.to_s == params[:ch_number] }
+    init_chapters
   end
 
   def update
     @book = Book.find_by(short_name: params[:book_short_name])
-    @chapter = @book.chapters.find { |chapter| chapter.ch_number.to_s == params[:ch_number] }
+    init_chapters
+
     tl_text = params[:chapter][:tl_text_data] || ''
     og_text = params[:chapter][:og_text_data] || ''
     @chapter.update(chapter_params)
@@ -49,7 +43,15 @@ class ChaptersController < ApplicationController
       @chapter.tl_text_data = tl_text
     end
     @chapter.og_text_data = og_text if @chapter.og_text_data != og_text
-    redirect_to book_chapter_url(@book)
+    if params[:save] == '& continue'
+      redirect_to edit_book_chapter_path(@book, @chapter)
+    elsif params[:save] == '& clean'
+      redirect_to new_book_corrupt_chapter_path(@book)
+    elsif params[:save] == '& edit next'
+      redirect_to edit_book_chapter_path(@book, @next)
+    else
+      redirect_to book_chapter_url(@book)
+    end
   end
 
   private
@@ -61,6 +63,12 @@ class ChaptersController < ApplicationController
       ch_params[:tl_title] = params[:chapter][:tl_text_data].lines.first.strip
     end
     ch_params
+  end
+
+  def init_chapters
+    @chapter = @book.chapters.find { |chapter| chapter.ch_number.to_s == params[:ch_number] }
+    @previous = @chapter.previous
+    @next = @chapter.next
   end
 
 end

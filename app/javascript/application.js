@@ -16,9 +16,7 @@ $(document).on('ready turbo:load', function() {
 
   buttons.forEach(function(button) {
     button.addEventListener("click", function (e) {
-      var btn = new bootstrap.Button(e.target);
-      console.log("test")
-      btn.toggle();
+      $(this).toggleClass('active')
     });
   });
 

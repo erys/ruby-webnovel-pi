@@ -17,9 +17,13 @@ class NiceFormBuilder < ActionView::Helpers::FormBuilder
 
   def copy_paste_float_text_field(attribute, title, options)
     content = floating_label_text_field(attribute, title) +
-      @template.copy_button("#" + field_id(attribute), classes: %w(btn-info), tag_name: :button) +
-      @template.paste_button('#' + field_id(attribute), classes: %w(btn-secondary), tag_name: :button)
+      @template.copy_button(hash_id(attribute), classes: %w(btn-info), tag_name: :button) +
+      @template.paste_button(hash_id(attribute), classes: %w(btn-secondary), tag_name: :button)
     tag.div content, **add_classes_to_options(options, %w(input-group))
+  end
+
+  def hash_id(attribute)
+    '#' + field_id(attribute)
   end
 
   private

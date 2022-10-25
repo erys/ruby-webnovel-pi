@@ -55,8 +55,12 @@ class ChaptersController < ApplicationController
   private
 
   def chapter_params
-    params.require(:chapter).permit(:og_title, :ch_number, :tl_title, :og_subtitle, :tl_subtitle)
-
+    ch_params = params.require(:chapter).permit(:og_title, :ch_number, :tl_title, :og_subtitle, :tl_subtitle)
+    if ch_params[:tl_title].blank? && params[:chapter][:tl_text_data].present? &&
+      ch_params[:og_title]&.strip == params[:chapter][:og_text_data]&.lines&.first&.strip
+      ch_params[:tl_title] = params[:chapter][:tl_text_data].lines.first.strip
+    end
+    ch_params
   end
 
 end

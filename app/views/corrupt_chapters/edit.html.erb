@@ -17,12 +17,6 @@
           <div class="row justify-content-between mb-2">
             <div class="col-auto">
               <div class="hstack">
-                <%=# form.submit "Replace", {-->
-                  # class: 'form-control btn btn-primary clipboard-btn',
-                  # 'data-clipboard-action' => "copy",
-                  # 'data-clipboard-text' => @corrupt_chapter.next_bytes,
-                   #}
-                %>
                 <span class="text-primary text-nowrap">Last replaced:
                   <strong><%= @corrupt_chapter.prev_char&.correct_char || 'none' %></strong></span>
               <% if @corrupt_chapter.can_undo? %>
@@ -48,10 +42,6 @@
                              'data-clipboard-action' => "copy",
                              'data-clipboard-text' => @corrupt_chapter.next_bytes %>
             <% end %>
-            <%#= form.collection_radio_buttons(:replacement, @corrupt_chapter.unused_chars, :to_s, :to_s) do |b| %>
-              <%#= b.radio_button(class: "btn-check", checked: "") %>
-              <%#= b.label(class: "btn btn-outline-info") %>
-            <%# end %>
           </div>
         <% end %>
       </div>

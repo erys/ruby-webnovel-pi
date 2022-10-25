@@ -21,4 +21,10 @@ $(document).on('ready turbo:load', function() {
       btn.toggle();
     });
   });
+
+  $(".paste-btn").click(paste_text);
 });
+
+async function paste_text(event) {
+  $($(event.currentTarget).attr('paste-target')).val(await navigator.clipboard.readText());
+}

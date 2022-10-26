@@ -34,6 +34,7 @@
               <%= copy_text_button(@current_char.og_bytes, label_text: 'Copy bytes', classes: %w[btn-info]) %>
             </div>
           </div>
+          <%# TODO: use same font as jjwxc (see C# version) %>
           <div class="d-flex flex-wrap">
             <% @corrupt_chapter.unused_chars.each do |char| %>
               <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn',

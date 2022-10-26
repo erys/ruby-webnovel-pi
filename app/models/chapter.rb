@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: chapters
@@ -28,6 +30,8 @@ class Chapter < ApplicationRecord
   has_one_attached :tl_text
   belongs_to :book
 
+  # TODO: add arc model
+
   def pretty_title
     if tl_title.present?
       "Chapter #{ch_number}: #{tl_title}"
@@ -37,7 +41,9 @@ class Chapter < ApplicationRecord
   end
 
   def og_text_data=(value)
-    value = value.force_encoding('UTF-8')
+    value = value&.force_encoding('UTF-8').presence
+    return if og_text_data == value
+
     @og_text_data = value
     og_text.attach(
       io: StringIO.new(value),
@@ -55,7 +61,9 @@ class Chapter < ApplicationRecord
   end
 
   def tl_text_data=(value)
-    value = value.force_encoding("UTF-8")
+    value = value&.force_encoding('UTF-8').presence
+    return if tl_text_data == value
+
     @tl_text_data = value
     tl_text.attach(
       io: StringIO.new(value),
@@ -65,12 +73,13 @@ class Chapter < ApplicationRecord
   end
 
   def tl_text_data
-    @tl_text_data ||= tl_text.blob&.download&.force_encoding("UTF-8")
+    @tl_text_data ||= tl_text.blob&.download&.force_encoding('UTF-8')
   end
 
   def previous
     book.chapters.find_by(ch_number: ch_number - 1)
   end
+
   def next
     book.chapters.find_by(ch_number: ch_number + 1)
   end

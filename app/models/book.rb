@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: books
@@ -34,6 +36,7 @@ class Book < ApplicationRecord
 
   after_create :create_occurrences
 
+  # TODO: links to jjwxc
   def to_param
     short_name
   end
@@ -43,7 +46,7 @@ class Book < ApplicationRecord
   end
 
   def latest_chapter
-    @latest_chapter ||= self.chapters.max { |a, b| a.ch_number <=> b.ch_number }
+    @latest_chapter ||= chapters.max { |a, b| a.ch_number <=> b.ch_number }
   end
 
   def new_chapter_number
@@ -51,7 +54,7 @@ class Book < ApplicationRecord
   end
 
   def sortable_title
-    tl_title.gsub(/^(A|An|The) /i, "")
+    tl_title.gsub(/^(A|An|The) /i, '')
   end
 
   def <=>(other)
@@ -59,10 +62,10 @@ class Book < ApplicationRecord
   end
 
   private
-  
+
   def create_occurrences
     Character.all.each do |character|
-      CharacterOccurrence.create(book: self, character: character, occurrences: 0)
+      CharacterOccurrence.create(book: self, character:, occurrences: 0)
     end
   end
 end

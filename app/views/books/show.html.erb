@@ -11,6 +11,7 @@
     <p><%= simple_format(@book.description) %></p>
   </div>
     <div class="col-lg-4" style="max-height: 400px">
+      <%# TODO: add subtitles to chapter display, at least on wide screens %>
       <div class="list-group mh-100" style="overflow-y: auto">
         <% @chapters.each_with_index do |chapter, i| %>
           <% classes = "list-group-item border-start list-group-item-action" %>

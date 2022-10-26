@@ -11,5 +11,17 @@
       </option>
       <option name="myCustomValuesEnabled" value="true" />
     </inspection_tool>
+    <inspection_tool class="Rubocop" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="mySeverityMap">
+        <map>
+          <entry key="convention" value="WEAK WARNING" />
+          <entry key="error" value="ERROR" />
+          <entry key="fatal" value="ERROR" />
+          <entry key="refactor" value="TEXT ATTRIBUTES" />
+          <entry key="warning" value="WARNING" />
+        </map>
+      </option>
+      <option name="myRunRubocopOnSave" value="true" />
+    </inspection_tool>
   </profile>
 </component>

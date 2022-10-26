@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Route Map
 #
 
@@ -13,8 +15,12 @@ Rails.application.routes.draw do
     resources :chapters, param: :ch_number do
       get :clean, on: :collection
     end
-    resources :corrupt_chapters, only: [:new, :create, :update, :edit] do
+    resources :corrupt_chapters, only: %i[new create update edit] do
       patch :undo, on: :member
     end
   end
+
+  # TODO: author pages
+  # TODO: auth required routes
+  # TODO: search ability
 end

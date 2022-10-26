@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
+# Controller for corrupt chapters
 class CorruptChaptersController < ApplicationController
   def create
+    # TODO: add check on ch_number
+    # TODO: add ability to overwrite existing chapter
     @book = Book.find_by(short_name: params[:book_short_name])
     cc_params = corrupt_chapter_params
     cc_params[:book_id] = @book.id
@@ -12,59 +17,38 @@ class CorruptChaptersController < ApplicationController
     fetch_chapter
     @corrupt_chapter.parse
     cache_chapter
-    @book = Book.find(@corrupt_chapter.book_id)
     if @corrupt_chapter.done?
-      @chapter = @corrupt_chapter.init_chapter
-      @chapter.save!
-      Rails.cache.delete(@corrupt_chapter.id)
-      flash[:last_action] = 'clean'
-      redirect_to(edit_book_chapter_path(@book, @chapter))
+      finish_chapter
     else
-      @excerpt = gen_excerpt
+      gen_excerpt
     end
   end
 
   def update
     fetch_chapter
-    @book = Book.find(@corrupt_chapter.book_id)
-    char = params[:commit]
-    unless char&.length == 1
-      redirect_to(edit_book_corrupt_chapter_path)
-      return
-    end
-    # unless update_params[:replacement].present?
-    #   redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
-    #   return
-    # end
-    @corrupt_chapter.replace(char)
-    # raise "blah"
-    #
-    if @corrupt_chapter.done?
-      @chapter = @corrupt_chapter.init_chapter
-      @chapter.save!
-      Rails.cache.delete(@corrupt_chapter.id)
-      flash[:last_action] = 'clean'
-      redirect_to(edit_book_chapter_path(@book, @chapter))
-    else
+    if params[:commit]&.length == 1
+      # TODO: javascript version
+      @corrupt_chapter.replace(params[:commit])
+
+      if @corrupt_chapter.done?
+        finish_chapter
+        return
+      end
       cache_chapter
-      # raise "blah"
-      redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
-      #TODO javascript version
     end
+    redirect_to(edit_book_corrupt_chapter_path)
   end
 
   def undo
     fetch_chapter
-    @book = Book.find(@corrupt_chapter.book_id)
     old_replacement = @corrupt_chapter.undo
     if old_replacement
       flash[:undo_success] = "Replace with <strong>#{old_replacement}</strong>"
     else
-      flash[:undo_failure] = "No replacements to undo"
+      flash[:undo_failure] = 'No replacements to undo'
     end
     cache_chapter
     redirect_to edit_book_corrupt_chapter_path
-
   end
 
   def new
@@ -74,19 +58,27 @@ class CorruptChaptersController < ApplicationController
   end
 
   def gen_excerpt
-    excerpt = view_context.excerpt(
-      @corrupt_chapter.og_text, 
-      @corrupt_chapter.char_to_replace.og_bytes, 
+    @excerpt = view_context.excerpt(
+      @corrupt_chapter.og_text,
+      @corrupt_chapter.char_to_replace.og_bytes,
       radius: 100
     )
     @corrupt_chapter.corrupt_chars.each do |corrupt_char|
-      corrupt_char.highlight(excerpt, @corrupt_chapter.char_to_replace)
+      corrupt_char.highlight(@excerpt, @corrupt_chapter.char_to_replace)
     end
     @current_char = @corrupt_chapter.char_to_replace
-    excerpt
   end
 
   private
+
+  def finish_chapter
+    @chapter = @corrupt_chapter.init_chapter
+    @chapter.save!
+    Rails.cache.delete(@corrupt_chapter.id)
+    flash[:last_action] = 'clean'
+    redirect_to(edit_book_chapter_path(@book, @chapter))
+  end
+
   def corrupt_chapter_params
     params.require(:corrupt_chapter).permit(:og_text, :ch_number, :subtitle)
   end
@@ -104,10 +96,11 @@ class CorruptChaptersController < ApplicationController
   end
 
   def fetch_chapter
-    if Rails.env.development?
-      @corrupt_chapter = CorruptChapter.from_json(Rails.cache.read(params[:id]))
-    else
-      @corrupt_chapter = Rails.cache.read(params[:id])
-    end
+    @corrupt_chapter = if Rails.env.development?
+                         CorruptChapter.from_json(Rails.cache.read(params[:id]))
+                       else
+                         Rails.cache.read(params[:id])
+                       end
+    @book = Book.find(@corrupt_chapter.book_id)
   end
 end

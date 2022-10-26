@@ -44,9 +44,9 @@ class Chapter < ApplicationRecord
     value = value&.force_encoding('UTF-8').presence
     return if og_text_data == value
 
-    @og_text_data = value
+    @og_text_data = value || ''
     og_text.attach(
-      io: StringIO.new(value),
+      io: StringIO.new(@og_text_data),
       filename: 'og_data.txt',
       content_type: 'text/plain'
     )
@@ -64,9 +64,9 @@ class Chapter < ApplicationRecord
     value = value&.force_encoding('UTF-8').presence
     return if tl_text_data == value
 
-    @tl_text_data = value
+    @tl_text_data = value || ''
     tl_text.attach(
-      io: StringIO.new(value),
+      io: StringIO.new(@tl_text_data),
       filename: 'tl_data.txt',
       content_type: 'text/plain'
     )

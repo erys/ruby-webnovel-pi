@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Controller for books
 class BooksController < ApplicationController
   def index
     @books = Book.all.sort
@@ -9,14 +12,12 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.find_by(short_name: params[:short_name])
-    @chapters = @book.chapters.sort_by { |chapter| chapter.ch_number }
+    @chapters = @book.chapters.sort_by(&:ch_number)
   end
 
   def create
     @author = Author.find_by(og_name: params[:book][:author_cn_name])
-    if @author.nil?
-      @author = Author.create(og_name: params[:book][:author_cn_name])
-    end
+    @author = Author.create(og_name: params[:book][:author_cn_name]) if @author.nil?
     @book = Book.new(book_params)
 
     if @book.save
@@ -33,9 +34,7 @@ class BooksController < ApplicationController
   def update
     @book = Book.find_by(short_name: params[:short_name])
     @author = Author.find_by(og_name: params[:book][:author_cn_name])
-    if @author.nil?
-      @author = Author.create(og_name: params[:book][:author_cn_name])
-    end
+    @author = Author.create(og_name: params[:book][:author_cn_name]) if @author.nil?
     @book.update!(book_params)
     redirect_to @book
   end
@@ -47,15 +46,20 @@ class BooksController < ApplicationController
   end
 
   private
+
   def book_params
     inner_params = params.require(:book).permit(:tl_title, :og_title, :description, :short_name)
     inner_params[:tl_title] = inner_params[:tl_title]&.squish
     inner_params[:author_id] = @author.id
-    if inner_params[:short_name].blank?
-      inner_params[:short_name] = inner_params[:tl_title].squish.split(' ').map { |word| word[0] }.join.upcase
+    inner_params[:short_name] = generate_short_name(inner_params[:tl_title], inner_params[:short_name])
+    inner_params
+  end
+
+  def generate_short_name(tl_title, short_name)
+    if short_name.blank? && tl_title.present?
+      tl_title.squish.split(' ').map { |word| word[0] }.join.upcase
     else
-      inner_params[:short_name] = inner_params[:short_name].squish.gsub(' ', '-').upcase
+      short_name&.squish&.gsub(' ', '-')&.upcase
     end
-    inner_params 
   end
 end

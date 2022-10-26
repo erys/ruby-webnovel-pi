@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-6 mb-3">
       <div class="container">
-        <%= nice_form_with model: [@book, @corrupt_chapter] do |form| %>
+        <%= nice_form_with model: [@book, @corrupt_chapter], url: book_corrupt_chapter_path do |form| %>
           <div class="row justify-content-between mb-2">
             <div class="col-auto">
               <div class="hstack">
@@ -24,7 +24,7 @@
                     formaction: undo_book_corrupt_chapter_path,
                     class: 'form-control btn btn-secondary clipboard-btn mx-2',
                     'data-clipboard-action' => "copy",
-                    'data-clipboard-text' => @corrupt_chapter.prev_bytes,
+                    'data-clipboard-text' => @corrupt_chapter.prev_char&.og_bytes,
                   } %>
                   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
               <% end %>
@@ -36,7 +36,7 @@
           </div>
           <%# TODO: use same font as jjwxc (see C# version) %>
           <div class="d-flex flex-wrap">
-            <% @corrupt_chapter.unused_chars.each do |char| %>
+            <% @corrupt_chapter.possible_replacements.each do |char| %>
               <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn',
                              'data-clipboard-action' => "copy",
                              'data-clipboard-text' => @corrupt_chapter.next_bytes %>

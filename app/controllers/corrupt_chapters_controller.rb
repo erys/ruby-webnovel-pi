@@ -8,7 +8,7 @@ class CorruptChaptersController < ApplicationController
     @book = Book.find_by(short_name: params[:book_short_name])
     cc_params = corrupt_chapter_params
     cc_params[:book_id] = @book.id
-    @corrupt_chapter = CorruptChapter.new(cc_params)
+    @corrupt_chapter = init_corrupt_chapter(cc_params)
     cache_chapter
     redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
   end
@@ -87,17 +87,25 @@ class CorruptChaptersController < ApplicationController
     params.require(:corrupt_chapter).permit(:replacement)
   end
 
+  def init_corrupt_chapter(cc_params)
+    if Rails.env.development?
+      CorruptChapterJson.new(cc_params)
+    else
+      CorruptChapter.new(cc_params)
+    end
+  end
+
   def cache_chapter
     if Rails.env.development?
       Rails.cache.write(@corrupt_chapter.id, @corrupt_chapter.to_json)
     else
-      Rails.cache.write(@corrupt_chapter.id, @corrupt_chapter, expires_in: 1.hour)
+      Rails.cache.write(@corrupt_chapter.id, @corrupt_chapter, expires_in: 6.hours)
     end
   end
 
   def fetch_chapter
     @corrupt_chapter = if Rails.env.development?
-                         CorruptChapter.from_json(Rails.cache.read(params[:id]))
+                         CorruptChapterJson.from_json(Rails.cache.read(params[:id]))
                        else
                          Rails.cache.read(params[:id])
                        end

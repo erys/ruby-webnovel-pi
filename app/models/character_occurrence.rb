@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: character_occurrences
@@ -24,7 +26,7 @@ class CharacterOccurrence < ApplicationRecord
   belongs_to :character
   belongs_to :book
 
-  def <=> other
+  def <=>(other)
     comp_array <=> other.comp_array
   end
 

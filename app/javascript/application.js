@@ -9,7 +9,6 @@ window.$ = window.jQuery = jQuery;
 $(document).on('ready turbo:load', function() {
   var clipboard = new ClipboardJS('.clipboard-btn');
   console.log(clipboard);
-//  $('.dropdown-toggle').dropdown()
   console.log("It works on each visit!")
 
   var buttons = document.querySelectorAll(".toggle-button");
@@ -23,6 +22,7 @@ $(document).on('ready turbo:load', function() {
   $(".paste-btn").click(paste_text);
 });
 
+// TODO: make this work with Ctrl-Z, if it's possible
 async function paste_text(event) {
   $($(event.currentTarget).attr('paste-target')).val(await navigator.clipboard.readText());
 }

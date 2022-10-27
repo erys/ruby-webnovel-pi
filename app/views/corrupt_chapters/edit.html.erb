@@ -39,7 +39,7 @@
             <% @corrupt_chapter.possible_replacements.each do |char| %>
               <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn',
                              'data-clipboard-action' => "copy",
-                             'data-clipboard-text' => @corrupt_chapter.next_char&.og_bytes %>
+                             'data-clipboard-text' => @corrupt_chapter.next_bytes %>
             <% end %>
           </div>
         <% end %>

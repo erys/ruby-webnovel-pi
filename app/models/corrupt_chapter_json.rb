@@ -27,7 +27,7 @@ class CorruptChapterJson < CorruptChapter
 
   def to_json(*_args)
     @corrupt_chars_json = corrupt_chars&.map(&:serializable_hash)
-    @index = corrupt_chars.index
+    @corrupt_chars_index = corrupt_chars&.index
     super
   end
 

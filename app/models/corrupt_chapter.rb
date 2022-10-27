@@ -54,6 +54,10 @@ class CorruptChapter
     previous_replacement
   end
 
+  def next_bytes
+    @corrupt_chars.next_char&.og_bytes || 'DONE'
+  end
+
   def init_chapter
     finalize_text
     register_occurrences

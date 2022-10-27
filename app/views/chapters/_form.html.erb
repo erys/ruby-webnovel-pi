@@ -57,7 +57,19 @@
 
     <div class="row">
       <div class="col-auto">
-        <%= form.submit class: 'form-control btn btn-success' %>
+        <% if action_name == 'new' %>
+          <%= form.submit class: 'form-control btn btn-success' %>
+        <% else %>
+          <div class="btn-group" role="group" aria-label="save buttons">
+            <%= form.submit 'Save', class: 'form-control btn btn-success pe-2', name: 'save' %>
+            <%= form.submit '& continue', class: 'form-control btn btn-primary px-2', name: 'save' %>
+            <%= form.submit '& ' + (@next.present? ? 'edit next' : 'clean'), class: 'form-control btn btn-info ps-2', name: 'save' %>
+<!--            <input type='submit' name="save" value='Save' class='form-control btn btn-success pe-1' form='chapter_create_edit_form'>-->
+<!--            <input type='submit' name="save" value='& continue' class="form-control btn btn-primary px-1" form='chapter_create_edit_form'>-->
+<!--            <input type='submit' name="save" value="& <%#= @next.present? ? 'edit next' : 'clean' %>"-->
+<!--                   class="form-control btn btn-info ps-1" form="chapter_create_edit_form">-->
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

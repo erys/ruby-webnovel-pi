@@ -11,12 +11,13 @@ class CorruptChapterJson < CorruptChapter
     possible_replacements
     possible_chars
     corrupt_chars_json
+    corrupt_chars_index
     parsed
     id
     subtitle
   ].freeze
 
-  attr_accessor :corrupt_chars_json
+  attr_accessor :corrupt_chars_json, :corrupt_chars_index
 
   def attributes
     JSON_SYMBOLS.map do |symbol|
@@ -25,14 +26,18 @@ class CorruptChapterJson < CorruptChapter
   end
 
   def to_json(*_args)
-    @corrupt_chars_json = corrupt_chars.map(&:serializable_hash)
+    @corrupt_chars_json = corrupt_chars&.map(&:serializable_hash)
+    @index = corrupt_chars.index
     super
   end
 
   class << self
     def from_json(json_string)
       chap = new.from_json(json_string)
-      chap.corrupt_chars = chap.corrupt_chars_json&.map { |hash| CorruptCharacter.new(hash) }
+      chap.corrupt_chars = CorruptCharacterList.new(
+        all_characters: chap.corrupt_chars_json&.map { |hash| CorruptCharacter.new(hash) },
+        index: chap.corrupt_chars_index
+      )
       chap
     end
   end

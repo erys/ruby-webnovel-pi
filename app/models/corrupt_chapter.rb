@@ -11,10 +11,11 @@ class CorruptChapter
   attr_accessor :og_text, :book_id, :ch_number, :corrupt_chars, :possible_replacements, :possible_chars,
                 :parsed, :id, :subtitle
 
+  delegate :can_undo?, :char_to_replace, :prev_char, :next_char, :done?, to: :@corrupt_chars
+
   def initialize(attributes = nil)
     super
     @id = SecureRandom.uuid
-    @corrupt_chars ||= []
   end
 
   def persisted?
@@ -32,46 +33,25 @@ class CorruptChapter
     initialize_text
     corrupt_hash = {}
     (@ch_start...@ch_end).each { |index| log_occurrence(corrupt_hash, index, og_text[index]) }
-    @corrupt_chars = corrupt_hash.values.sort.reverse!
+    @corrupt_chars = CorruptCharacterList.new(
+      all_characters: corrupt_hash.values.sort.reverse!
+    )
     @possible_replacements = @possible_chars.select { |_, value| (value[1]).zero? }.keys
     @parsed = true
   end
 
   def replace(new_char)
-    char_to_replace.correct_char = new_char
+    @corrupt_chars.replace(new_char)
     @possible_replacements.delete(new_char)
   end
 
-  def can_undo?
-    @corrupt_chars.first&.known?
-  end
-
-  def prev_char
-    return nil unless can_undo?
-    return @corrupt_chars.last if char_to_replace.nil?
-
-    @corrupt_chars[@corrupt_chars.index(char_to_replace) - 1]
-  end
-
   def undo
-    previous = prev_char
-    return unless previous.present?
+    previous_replacement = @corrupt_chars.undo
+    return unless previous_replacement
 
-    @possible_replacements.push(previous.correct_char)
+    @possible_replacements.push(previous_replacement)
     @possible_replacements = @possible_chars.keys.intersection(@possible_replacements)
-    previous.reset_char
-  end
-
-  def char_to_replace
-    @corrupt_chars.find { |char| !char.known? }
-  end
-
-  def next_bytes
-    @corrupt_chars[@corrupt_chars.index(char_to_replace) + 1]&.og_bytes
-  end
-
-  def done?
-    @corrupt_chars.all?(&:known?)
+    previous_replacement
   end
 
   def init_chapter
@@ -87,7 +67,8 @@ class CorruptChapter
     id_hash = possible_chars.values.to_h
     book = Book.includes(:character_occurrences).find(book_id)
     book.character_occurrences.each do |occurrence|
-      occurrence.increment!(:occurrences, id_hash[occurrence.id]) unless (id_hash[occurrence.id]).zero?
+      count = id_hash[occurrence.id]
+      occurrence.increment!(:occurrences, count) unless count.zero?
       # this field is only used the first time you clean a chapter for a book
       # so removing for performance reasons
       # occurrence.character.global_occurrences += id_hash[occurrence.id]
@@ -124,7 +105,7 @@ class CorruptChapter
   end
 
   def finalize_text
-    corrupt_chars.each do |char|
+    @corrupt_chars.each do |char|
       char.replace(og_text)
       possible_chars[char.correct_char][1] = char.occurrences
     end

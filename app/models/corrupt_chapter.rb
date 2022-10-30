@@ -72,7 +72,10 @@ class CorruptChapter
     book = Book.includes(:character_occurrences).find(book_id)
     book.character_occurrences.each do |occurrence|
       count = id_hash[occurrence.id]
-      occurrence.increment!(:occurrences, count) unless count.zero?
+      unless count.zero?
+        occurrence.increment(:occurrences, count)
+        occurrence.save!
+      end
       # this field is only used the first time you clean a chapter for a book
       # so removing for performance reasons
       # occurrence.character.global_occurrences += id_hash[occurrence.id]

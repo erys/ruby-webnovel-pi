@@ -22,7 +22,7 @@ $(document).on('ready turbo:load', function() {
   $(".paste-btn").click(paste_text);
 });
 
-// TODO: make this work with Ctrl-Z, if it's possible
+// TODO: #15 make this work with Ctrl-Z, if it's possible
 async function paste_text(event) {
   $($(event.currentTarget).attr('paste-target')).val(await navigator.clipboard.readText());
 }

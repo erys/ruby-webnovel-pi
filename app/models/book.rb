@@ -36,7 +36,7 @@ class Book < ApplicationRecord
 
   after_create :create_occurrences
 
-  # TODO: links to jjwxc
+  # TODO: #16 links to jjwxc
   def to_param
     short_name
   end

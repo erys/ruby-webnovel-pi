@@ -3,8 +3,8 @@
 # Controller for corrupt chapters
 class CorruptChaptersController < ApplicationController
   def create
-    # TODO: add check on ch_number
-    # TODO: add ability to overwrite existing chapter
+    # TODO: #12 add check on ch_number
+    # TODO: #13 add ability to overwrite existing chapter
     @book = Book.find_by(short_name: params[:book_short_name])
     cc_params = corrupt_chapter_params
     cc_params[:book_id] = @book.id
@@ -27,7 +27,7 @@ class CorruptChaptersController < ApplicationController
   def update
     fetch_chapter
     if params[:commit]&.length == 1
-      # TODO: javascript version
+      # TODO: #14 javascript version
       @corrupt_chapter.replace(params[:commit])
 
       if @corrupt_chapter.done?

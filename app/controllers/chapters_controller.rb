@@ -2,7 +2,7 @@
 
 # Controller for chapters
 class ChaptersController < ApplicationController
-  # TODO: find/replace on english text
+  # TODO: #11 find/replace on english text
   #   option 1: part of normal text edit
   #   option 2: set auto find replace on a per book basis (useful for names, i.e. Lin Samuel -> Lin Huai)
   #   this would either auto replace on save, or would be a button that would give interactive view
@@ -29,7 +29,7 @@ class ChaptersController < ApplicationController
     redirect_to book_chapter_path(@book, @chapter)
   end
 
-  # TODO: delete+destroy
+  # TODO: #8 delete+destroy
   # def delete
   # end
 
@@ -48,8 +48,8 @@ class ChaptersController < ApplicationController
     save_redirect
   end
 
-  # TODO: side by side text edit with chinese, keeping lines together
-  # TODO: rich text or markdown editing
+  # TODO: #9 side by side text edit with chinese, keeping lines together
+  # TODO: #10 rich text or markdown editing
 
   private
 

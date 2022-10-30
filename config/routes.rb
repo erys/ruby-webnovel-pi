@@ -20,7 +20,11 @@ Rails.application.routes.draw do
     end
   end
 
-  # TODO: author pages
-  # TODO: auth required routes
-  # TODO: search ability
+  # TODO: #2 author pages
+  # TODO: #3 auth required routes
+  # TODO: #4 search ability
+  # TODO: #5 way to export data into some format
+  #   (zip with chinese/english chapters in txt files and csv of all author/book/chapter metadata)
+  #   Don't export character frequency stuff
+  # TODO: #6 user reading history/progress
 end

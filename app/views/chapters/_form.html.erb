@@ -39,8 +39,9 @@
           </div>
 
         </div>
-        <%# TODO: #21 make these shorter, or maybe based on screen height in some way? %>
-        <%= form.text_area :og_text_data, {class: 'form-control', rows: 20} %>
+        <div style="max-height: 60vh; height: 400px">
+          <%= form.text_area :og_text_data, {class: 'form-control h-100'} %>
+        </div>
       </div>
 
       <div class="col-md mb-1">
@@ -52,7 +53,9 @@
             <%= copy_paste_group form.hash_id(:tl_text_data), btn_classes: %w(btn-sm) %>
           </div>
         </div>
-        <%= form.text_area :tl_text_data, {class: 'form-control', rows: 20 }%>
+        <div style="max-height: 60vh; height: 400px">
+          <%= form.text_area :tl_text_data, {class: 'form-control h-100'}%>
+        </div>
       </div>
     </div>
 

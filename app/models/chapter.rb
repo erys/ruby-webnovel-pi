@@ -30,7 +30,7 @@ class Chapter < ApplicationRecord
   has_one_attached :tl_text
   belongs_to :book
 
-  # TODO: add arc model
+  # TODO: #17 add arc model
 
   def pretty_title
     if tl_title.present?

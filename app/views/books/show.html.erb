@@ -8,20 +8,28 @@
     <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
 
     <div class="col-lg-8">
-    <p><%= simple_format(@book.description) %></p>
-  </div>
-    <div class="col-lg-4" style="max-height: 400px">
-      <%# TODO: #19 add subtitles to chapter display, at least on wide screens %>
-      <%# TODO: #20 link to latest chapter at top %>
-      <div class="list-group mh-100" style="overflow-y: auto">
-        <% @chapters.each_with_index do |chapter, i| %>
-          <% classes = "list-group-item border-start list-group-item-action" %>
-          <% classes += " rounded-top" if i == 0 %>
-          <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
-        <% end %>
-        <div class="clearfix split-items">
-          <%= link_to "Add chapter", new_book_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info left-side" %>
-          <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-primary right-side" %>
+      <p><%= simple_format(@book.description) %></p>
+    </div>
+    <div class="col-lg-4">
+      <div class="card" style="height: 75vh; overflow-y: auto">
+        <div class="card-header">Chapters</div>
+        <%# TODO: #19 add subtitles to chapter display, at least on wide screens %>
+        <div class="list-group list-group-flush">
+          <% if @book.latest_chapter.present? %>
+            <div class="list-group-item disabled">Latest Chapter:</div>
+            <% chapter = @book.latest_chapter %>
+            <% classes = "list-group-item list-group-item-action list-group-item-primary" %>
+            <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
+            <div class="list-group-item disabled">All Chapters:</div>
+          <% end %>
+          <% @chapters.each_with_index do |chapter, i| %>
+            <% classes = "list-group-item list-group-item-action" %>
+            <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
+          <% end %>
+          <div class="clearfix split-items">
+            <%= link_to "Add chapter", new_book_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info left-side" %>
+            <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-primary right-side" %>
+          </div>
         </div>
       </div>
     </div>

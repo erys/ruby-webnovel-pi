@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     end
     resources :corrupt_chapters, only: %i[new create update edit] do
       patch :undo, on: :member
+      post :store, on: :collection
     end
   end
 

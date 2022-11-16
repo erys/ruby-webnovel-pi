@@ -4,7 +4,12 @@
 <div class="container px-2">
   <div class="row mb-2">
     <h1 class="text-center"><%= @book.tl_title %></h1>
-    <h2 class="text-muted text-center"><%= @book.og_title %></h2>
+    <h2 class="text-muted text-center">
+      <% if @book.jjwxc_id.present?%>
+        <%= link_to @book.og_title, @book.jjwxc_url, target: "_blank" %>
+      <% else %>
+        <%= @book.og_title %>
+      <% end %></h2>
     <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
 
     <div class="col-lg-8">

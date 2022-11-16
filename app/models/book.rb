@@ -17,6 +17,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  author_id      :integer          not null
+#  jjwxc_id       :integer
 #
 # Indexes
 #
@@ -33,6 +34,7 @@ class Book < ApplicationRecord
   belongs_to :author
   has_many :chapters, dependent: :destroy
   has_many :character_occurrences, dependent: :destroy
+  has_many :original_chapters, dependent: :destroy
 
   after_create :create_occurrences
 
@@ -43,6 +45,10 @@ class Book < ApplicationRecord
 
   def author_cn_name
     author&.og_name
+  end
+
+  def jjwxc_url
+    "https://www.jjwxc.net/onebook.php?novelid=#{jjwxc_id}" if jjwxc_id.present?
   end
 
   def latest_chapter

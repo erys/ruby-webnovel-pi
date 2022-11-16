@@ -34,6 +34,7 @@ class Book < ApplicationRecord
   belongs_to :author
   has_many :chapters, dependent: :destroy
   has_many :character_occurrences, dependent: :destroy
+  has_many :original_chapters, dependent: :destroy
 
   after_create :create_occurrences
 

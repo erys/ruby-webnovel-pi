@@ -49,6 +49,8 @@ gem 'bootswatch', github: 'thomaspark/bootswatch'
 gem 'clipboard-rails'
 gem 'jquery-rails'
 
+gem 'rack-cors'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

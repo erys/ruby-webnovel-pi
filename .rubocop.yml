@@ -15,3 +15,5 @@ AllCops:
     - '.git/**/*'
     - 'config.ru'
     - 'rakefile'
+Style/EndOfLine:
+  EnforcedStyle: lf

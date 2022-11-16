@@ -4,6 +4,9 @@
 #
 
 Rails.application.routes.draw do
+  namespace :api do
+    resources :original_chapters, only: %i[create]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
@@ -17,7 +20,6 @@ Rails.application.routes.draw do
     end
     resources :corrupt_chapters, only: %i[new create update edit] do
       patch :undo, on: :member
-      post :store, on: :collection
     end
   end
 

@@ -17,6 +17,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  author_id      :integer          not null
+#  jjwxc_id       :integer
 #
 # Indexes
 #

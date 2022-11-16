@@ -46,6 +46,10 @@ class Book < ApplicationRecord
     author&.og_name
   end
 
+  def jjwxc_url
+    "https://www.jjwxc.net/onebook.php?novelid=#{jjwxc_id}" if jjwxc_id.present?
+  end
+
   def latest_chapter
     @latest_chapter ||= chapters.max { |a, b| a.ch_number <=> b.ch_number }
   end

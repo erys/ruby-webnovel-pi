@@ -49,6 +49,8 @@ Rails.application.configure do
   # https://stackoverflow.com/questions/66558788/how-to-create-a-self-signed-or-signed-by-own-ca-ssl-certificate-for-ip-address
   # and
   # https://rossta.net/blog/local-ssl-for-rails-5.html#create-a-self-signed-certificate
+  # launch server with
+  # RAILS_SERVE_STATIC_FILES=1 bin/rails s -b 'ssl://0.0.0.0:3000?key=config/ssl/localhost_key.pem&cert=config/ssl/localhost_cert.pem' -e production
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true

@@ -8,6 +8,12 @@ class CorruptChapter
   CHAPTER_END_STR = '插入书签'
   JJWXC_TEXT = '@无限好文，尽在晋江文学城'
 
+  # constants for the acknowledgements section in the author's note
+  ACK_END = '非常感谢大家对我的支持，我会继续努力的！'
+  ACK_REGEX = /(感谢在\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}~\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}期间为我投出霸王票或灌溉营养液的小天使哦~)
+                .*
+                #{ACK_END}/mx
+
   attr_accessor :og_text, :book_id, :ch_number, :corrupt_chars, :possible_replacements, :possible_chars,
                 :parsed, :id, :subtitle
 
@@ -100,6 +106,7 @@ class CorruptChapter
 
   def initialize_text
     @og_text.gsub!(JJWXC_TEXT, '')
+    @og_text.gsub!(ACK_REGEX, "\\1\n[truncated]\n#{ACK_END}")
     @ch_start = @og_text.index("\n") || 0
     @ch_end = @og_text.index(CHAPTER_END_STR) || @og_text.length
     init_occurrences

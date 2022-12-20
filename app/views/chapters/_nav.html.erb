@@ -14,9 +14,6 @@
 			<% if @next %>
 			<%= link_to "Next", book_chapter_path(@book, @next), class: 'nav-link' %>
 			<%else %>
-			<%= link_to "Add chapter", new_book_chapter_path(@book), class: 'nav-link' %>
-				</li>
-				<li class="nav-item">
 					<%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: 'nav-link' %>
 			<% end %>
 		</li>

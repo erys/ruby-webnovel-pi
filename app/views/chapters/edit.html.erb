@@ -8,11 +8,6 @@
     </div>
     <div class="col-auto align-self-end">
       <div class="btn-toolbar" role="toolbar">
-        <% if flash[:last_action] == 'clean' %>
-          <div class="btn-group-sm" role=group>
-            <%= link_to 'Clean another', new_book_corrupt_chapter_path(@book), {class: 'btn btn-info me-2 text-nowrap'} %>
-          </div>
-        <% end %>
         <div class="btn-group btn-group-sm" role=group>
           <%= link_to 'Cancel', book_chapter_path(@book, @chapter), {class: 'btn btn-secondary me-2'}%>
         </div>

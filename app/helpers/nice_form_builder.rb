@@ -16,6 +16,12 @@ class NiceFormBuilder < ActionView::Helpers::FormBuilder
     floating_label_field(:text_area, attribute, title, field_options, options)
   end
 
+  def floating_label_select(attribute, title, values, field_options = {})
+    field_options = add_classes_to_options(field_options, ['form-select']).merge(placeholder: 'placeholder')
+    content = public_send(:select, attribute, values, {}, field_options) + label(attribute, title)
+    tag.div content, **add_classes_to_options({}, ['form-floating'])
+  end
+
   def ch_number_field(options = {})
     floating_label_number_field :ch_number, 'Chapter number', { step: 1 }, options
   end

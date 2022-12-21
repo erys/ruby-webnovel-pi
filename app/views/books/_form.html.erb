@@ -8,14 +8,20 @@
       <div class="col-md-6">
         <%= form.floating_label_text_field :tl_title, 'Translated title', {}, {class: %w(mb-3)} %>
       </div>
-      <div class="col-md-auto">
+      <div class="col-md-auto col-4">
         <%= form.floating_label_text_field :author_cn_name, 'Author', {}, {class: %w(mb-3)} %>
       </div>
-      <div class="col-md-auto">
+      <div class="col-md-auto col-4">
         <%= form.floating_label_text_field :short_name, 'Abbreviation', {style: 'text-transform: uppercase'}, {class: %w(mb-3)} %>
       </div>
-      <div class="col-md-auto">
+      <div class="col-md-auto col-4">
         <%= form.floating_label_number_field :jjwxc_id, "Novel ID", {class: %w(mb-3)} %>
+      </div>
+      <div class="col">
+        <%= form.floating_label_select :original_status, "JJWXC Status", Book::BOOK_STATUSES, {class: %w(mb-3)} %>
+      </div>
+      <div class="col">
+        <%= form.floating_label_select :translation_status, "Translation Status", Book::TRANSLATION_STATUSES, {class: %w(mb-3)} %>
       </div>
     </div>
 

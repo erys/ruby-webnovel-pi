@@ -64,13 +64,16 @@ class Book < ApplicationRecord
   READING_ALONG = 'Reading Along'
 
   STATUS_TO_CLASS = {
-    COMPLETED => 'success',
+    COMPLETED => 'info',
     IN_PROGRESS => 'primary',
-    READING_ALONG => 'primary',
+    READING_ALONG => 'success',
+    CAUGHT_UP => 'info',
     PRECOLLECTION => 'light',
     TRANSLATION_DROPPED => 'danger',
-    TRANSLATION_PAUSED => 'secondary',
-    PLANNED => 'info',
+    DROPPED => 'danger',
+    PAUSED => 'warning',
+    TRANSLATION_PAUSED => 'warning',
+    PLANNED => 'light'
   }.freeze
 
   belongs_to :author

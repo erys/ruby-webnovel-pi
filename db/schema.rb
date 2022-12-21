@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_16_160939) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_21_215919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -63,6 +63,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_16_160939) do
     t.text "description"
     t.string "short_name"
     t.integer "jjwxc_id"
+    t.string "translation_status", default: "In Progress"
+    t.string "original_status", default: "Completed"
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["short_name"], name: "index_books_on_short_name", unique: true
   end

@@ -1,56 +1,54 @@
 <% content_for :nav do %>
   <%= render 'chapters/nav_top' %>
 <% end %>
-<div class="container px-2">
-  <div class="row mb-2">
-    <h1 class="text-center"><%= @book.tl_title %></h1>
-    <h2 class="text-muted text-center">
-      <% if @book.jjwxc_id.present?%>
-        <%= link_to @book.og_title, @book.jjwxc_url, target: "_blank" %>
-      <% else %>
-        <%= @book.og_title %>
-      <% end %></h2>
-    <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
+<div class="row mb-2">
+  <h1 class="text-center"><%= @book.tl_title %></h1>
+  <h2 class="text-muted text-center">
+    <% if @book.jjwxc_id.present?%>
+      <%= link_to @book.og_title, @book.jjwxc_url, target: "_blank" %>
+    <% else %>
+      <%= @book.og_title %>
+    <% end %></h2>
+  <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
+</div>
+<p class="text-center pt-2"><%= @book.translation_progress %> Chapters Translated, <%= @book.overall_status %></p>
+<div class="progress mt-n3 mb-2">
+  <div class="progress-bar bg-<%= @book.status_class %>" role="progressbar"
+       style="width: <%= number_to_percentage(@book.translation_progress_percent, precision: 0) %>"
+       aria-valuenow="<%= @book.translation_progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
   </div>
-  <p class="text-center pt-2"><%= @book.translation_progress %> Chapters Translated, <%= @book.overall_status %></div>
-  <div class="progress mt-n3 mb-2">
-    <div class="progress-bar bg-<%= @book.status_class %>" role="progressbar"
-         style="width: <%= number_to_percentage(@book.translation_progress_percent, precision: 0) %>"
-         aria-valuenow="<%= @book.translation_progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
-    </div>
+</div>
+<div class="row mb-2">
+  <div class="col-lg-8">
+    <p><%= simple_format(@book.description) %></p>
   </div>
-  <div class="row mb-2">
-    <div class="col-lg-8">
-      <p><%= simple_format(@book.description) %></p>
-    </div>
-    <div class="col-lg-4">
-      <div class="card" style="height: 75vh; overflow-y: auto">
-        <div class="card-header">Chapters</div>
-        <%# TODO: #19 add subtitles to chapter display, at least on wide screens %>
-        <div class="list-group list-group-flush">
-          <% if @book.latest_chapter.present? %>
-            <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
-            <div class="list-group-item disabled">Latest Chapter:</div>
-            <% chapter = @book.latest_chapter %>
-            <% classes = "list-group-item list-group-item-action list-group-item-primary" %>
-            <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
-            <div class="list-group-item disabled">All Chapters:</div>
-          <% end %>
-          <% @chapters.each_with_index do |chapter, i| %>
-            <% classes = "list-group-item list-group-item-action" %>
-            <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
-          <% end %>
+  <div class="col-lg-4">
+    <div class="card" style="height: 75vh; overflow-y: auto">
+      <div class="card-header">Chapters</div>
+      <%# TODO: #19 add subtitles to chapter display, at least on wide screens %>
+      <div class="list-group list-group-flush">
+        <% if @book.latest_chapter.present? %>
           <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
-        </div>
+          <div class="list-group-item disabled">Latest Chapter:</div>
+          <% chapter = @book.latest_chapter %>
+          <% classes = "list-group-item list-group-item-action list-group-item-primary" %>
+          <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
+          <div class="list-group-item disabled">All Chapters:</div>
+        <% end %>
+        <% @chapters.each_with_index do |chapter, i| %>
+          <% classes = "list-group-item list-group-item-action" %>
+          <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
+        <% end %>
+        <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
       </div>
     </div>
   </div>
-
-  <%= link_to "Delete Book", book_path(@book), class: "btn btn-danger", data: {
-    turbo_method: :delete,
-    turbo_confirm: "Are you sure you want to delete #{@book.tl_title}? This will also delete #{@chapters.size} chapter(s) and cannot be undone"
-  } %>
-
-  <%= link_to "All Books", root_path %>
-  <%= link_to "Edit", edit_book_path %>
 </div>
+
+<%= link_to "Delete Book", book_path(@book), class: "btn btn-danger", data: {
+  turbo_method: :delete,
+  turbo_confirm: "Are you sure you want to delete #{@book.tl_title}? This will also delete #{@chapters.size} chapter(s) and cannot be undone"
+} %>
+
+<%= link_to "All Books", root_path %>
+<%= link_to "Edit", edit_book_path %>

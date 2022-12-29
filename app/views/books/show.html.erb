@@ -11,7 +11,15 @@
         <%= @book.og_title %>
       <% end %></h2>
     <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
-
+  </div>
+  <p class="text-center pt-2"><%= @book.translation_progress %> Chapters Translated, <%= @book.overall_status %></div>
+  <div class="progress mt-n3 mb-2">
+    <div class="progress-bar bg-<%= @book.status_class %>" role="progressbar"
+         style="width: <%= number_to_percentage(@book.translation_progress_percent, precision: 0) %>"
+         aria-valuenow="<%= @book.translation_progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
+    </div>
+  </div>
+  <div class="row mb-2">
     <div class="col-lg-8">
       <p><%= simple_format(@book.description) %></p>
     </div>

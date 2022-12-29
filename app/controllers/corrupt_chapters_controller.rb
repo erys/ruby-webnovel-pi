@@ -61,7 +61,7 @@ class CorruptChaptersController < ApplicationController
     @excerpt = view_context.excerpt(
       @corrupt_chapter.og_text,
       @corrupt_chapter.char_to_replace.og_bytes,
-      radius: 100
+      radius: 50
     )
     @corrupt_chapter.corrupt_chars.each do |corrupt_char|
       corrupt_char.highlight(@excerpt, @corrupt_chapter.char_to_replace)

@@ -6,6 +6,7 @@
 #
 #  id                 :bigint           not null, primary key
 #  description        :text
+#  last_chapter       :integer
 #  og_source          :string
 #  og_source_link     :string
 #  og_title           :string           not null
@@ -86,13 +87,18 @@ class Book < ApplicationRecord
 
   after_create :create_occurrences
 
-  # TODO: #16 links to jjwxc
   def to_param
     short_name
   end
 
   def author_cn_name
     author&.og_name
+  end
+
+  def source_chapter_count
+    return last_chapter if last_chapter.present?
+
+    latest_chapter&.ch_number || 0
   end
 
   def overall_status
@@ -107,6 +113,16 @@ class Book < ApplicationRecord
 
   def status_class
     STATUS_TO_CLASS[overall_status]
+  end
+
+  def translation_progress_percent
+    return 0 unless source_chapter_count&.positive? && latest_chapter.present?
+
+    (latest_chapter.ch_number * 100.0) / source_chapter_count
+  end
+
+  def translation_progress
+    "#{latest_chapter&.ch_number || 0}/#{source_chapter_count}#{'+' if original_status == IN_PROGRESS}"
   end
 
   def jjwxc_url

@@ -1,24 +1,27 @@
+<h1>Books</h1>
 
-<%# TODO: #18 make these cards instead, at least in wide screens %>
-<div class="list-group">
-  <% @books.each do |book| %>
-    <% classes = "list-group-item list-group-item-action" %>
-    <a href="<%= book_path(book) %>" class="<%= classes %>">
-      <div class="d-flex justify-content-between align-items-center">
-        <%= book.tl_title %>
-        <span class="badge bg-<%= book.status_class %>"><%= book.overall_status %>: <%= book.translation_progress %></span>
-
-      </div>
-      <div class="progress mt-1" style="height: 1px">
-        <div class="progress-bar bg-<%= book.status_class %>" role="progressbar"
-             style="width: <%= number_to_percentage(book.translation_progress_percent, precision: 0) %>"
-             aria-valuenow="<%= book.translation_progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
-        </div>
-      </div>
-    </a>
+<ul class="nav nav-tabs" id="bookListTab" role="tablist">
+  <% BooksController::CATEGORIES.each do |cat_symbol, _| %>
+    <%= book_list_tab cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY %>
   <% end %>
-  <%= link_to "Add Book", new_book_path, class: %w[list-group-item list-group-item-action list-group-item-info]%>
+</ul>
 
-
+<div class="tab-content" id="bookListTabContent">
+  <% BooksController::CATEGORIES.each do |cat_symbol, statuses| %>
+    <%= book_list_tab_pane cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY  do %>
+      <% if statuses.blank? %>
+        <% tab_books = @books %>
+      <% else %>
+        <% tab_books = @books.select { |book| statuses.include?(book.overall_status) } %>
+      <% end %>
+      <div class="list-group">
+        <% tab_books.each do |book| %>
+          <%= render partial: 'list_group_item', locals: { book:, status_color: statuses.blank? } %>
+        <% end %>
+        <%= link_to "Add Book", new_book_path, class: %w[list-group-item list-group-item-action list-group-item-info]%>
+      </div>
+    <% end %>
+  <% end %>
 </div>
+<%# TODO: #18 make these cards instead, at least in wide screens %>
 

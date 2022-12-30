@@ -13,10 +13,7 @@
 </div>
 <p class="text-center pt-2"><%= @book.translation_progress %> Chapters Translated, <%= @book.overall_status %></p>
 <div class="progress mt-n3 mb-2">
-  <div class="progress-bar bg-<%= @book.status_class %>" role="progressbar"
-       style="width: <%= number_to_percentage(@book.translation_progress_percent, precision: 0) %>"
-       aria-valuenow="<%= @book.translation_progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
-  </div>
+  <%= render partial: 'progress_bar', locals: { book: @book } %>
 </div>
 <div class="row mb-2">
   <div class="col-lg-8">

@@ -2,6 +2,16 @@
 
 # Controller for books
 class BooksController < ApplicationController
+  CATEGORIES = {
+    current: [Book::READING_ALONG, Book::IN_PROGRESS],
+    up_next: [Book::TRANSLATION_PAUSED, Book::PLANNED],
+    done: [Book::COMPLETED],
+    other: [Book::TRANSLATION_DROPPED, Book::PRECOLLECTION],
+    all: nil
+  }.freeze
+
+  DEFAULT_CATEGORY = :current
+
   def index
     @books = Book.all.sort
   end

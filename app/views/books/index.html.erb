@@ -16,7 +16,7 @@
       <% end %>
       <div class="list-group">
         <% tab_books.each do |book| %>
-          <%= render partial: 'list_group_item', locals: { book:, status_color: statuses.blank? } %>
+          <%= render partial: 'list_group_item', locals: { book:, new_chapter_button: cat_symbol == :current } %>
         <% end %>
         <%= link_to "Add Book", new_book_path, class: %w[list-group-item list-group-item-action list-group-item-info]%>
       </div>

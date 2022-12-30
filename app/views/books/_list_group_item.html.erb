@@ -1,13 +1,22 @@
-<% classes = "list-group-item list-group-item-action" %>
-<%= link_to book, class: classes do %>
-  <div class="d-flex justify-content-between align-items-center">
-    <%= book.tl_title %>
+<div class="list-group-item list-group-item-action">
+  <div class="row">
+    <%= link_to book, class: 'col text-reset text-decoration-none' do %>
+      <div class="d-flex justify-content-between align-items-center ">
+        <%= book.tl_title %>
 
-      <% status_class = "bg-#{book.status_class}" %>
-    <span class="badge <%= status_class %>"><%= book.overall_status %>: <%= book.translation_progress %></span>
+        <% status_class = "bg-#{book.status_class}" %>
+        <span class="badge <%= status_class %>"><%= book.overall_status %>: <%= book.translation_progress %></span>
 
+      </div>
+      <div class="progress mt-1" style="height: 1px">
+        <%= render partial: 'progress_bar', locals: { book: } %>
+      </div>
+    <% end %>
+    <% if local_assigns[:new_chapter_button] %>
+      <%= link_to new_book_corrupt_chapter_path(book),
+                  class: %w[col-auto mh-100 m-n2 py-0 justify-content-center], style: "height:100%" do %>
+        <i class="bi-plus-square-fill text-<%= book.status_class %> py-0" style="font-size: 40px; line-height: 40px"></i>
+      <% end %>
+    <% end %>
   </div>
-  <div class="progress mt-1" style="height: 1px">
-    <%= render partial: 'progress_bar', locals: { book: } %>
-  </div>
-<% end %>
+</div>

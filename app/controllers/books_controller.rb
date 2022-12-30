@@ -2,6 +2,16 @@
 
 # Controller for books
 class BooksController < ApplicationController
+  CATEGORIES = {
+    current: [Book::READING_ALONG, Book::IN_PROGRESS],
+    up_next: [Book::TRANSLATION_PAUSED, Book::PLANNED],
+    done: [Book::COMPLETED],
+    other: [Book::TRANSLATION_DROPPED, Book::PRECOLLECTION],
+    all: nil
+  }.freeze
+
+  DEFAULT_CATEGORY = :current
+
   def index
     @books = Book.all.sort
   end
@@ -49,7 +59,8 @@ class BooksController < ApplicationController
 
   def book_params
     inner_params = params.require(:book).permit(:tl_title, :og_title, :description, :short_name,
-                                                :jjwxc_id, :original_status, :translation_status)
+                                                :jjwxc_id, :original_status, :translation_status,
+                                                :last_chapter)
     inner_params[:tl_title] = inner_params[:tl_title]&.squish
     inner_params[:author_id] = @author.id
     inner_params[:short_name] = generate_short_name(inner_params[:tl_title], inner_params[:short_name])

@@ -1,20 +1,27 @@
-<div class="container px-2">
-  <h1>Books</h1>
+<h1>Books</h1>
 
-  <%# TODO: #18 make these cards instead, at least in wide screens %>
-  <div class="list-group">
-    <% @books.each do |book| %>
-        <% classes = "list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-#{book.status_class}" %>
-        <a href="<%= book_path(book) %>" class="<%= classes %>">
-          <%= book.tl_title %>
-          <span class="badge bg-<%= book.status_class %>"><%= book.overall_status %></span>
-        </a>
+<ul class="nav nav-tabs" id="bookListTab" role="tablist">
+  <% BooksController::CATEGORIES.each do |cat_symbol, _| %>
+    <%= book_list_tab cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY %>
+  <% end %>
+</ul>
+
+<div class="tab-content" id="bookListTabContent">
+  <% BooksController::CATEGORIES.each do |cat_symbol, statuses| %>
+    <%= book_list_tab_pane cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY  do %>
+      <% if statuses.blank? %>
+        <% tab_books = @books %>
+      <% else %>
+        <% tab_books = @books.select { |book| statuses.include?(book.overall_status) } %>
+      <% end %>
+      <div class="list-group">
+        <% tab_books.each do |book| %>
+          <%= render partial: 'list_group_item', locals: { book:, status_color: statuses.blank? } %>
+        <% end %>
+        <%= link_to "Add Book", new_book_path, class: %w[list-group-item list-group-item-action list-group-item-info]%>
+      </div>
     <% end %>
-    <%= link_to "Add Book", new_book_path, class: %w[list-group-item list-group-item-action]%>
-
-
-  </div>
-  <ul>
-  </ul>
-
+  <% end %>
 </div>
+<%# TODO: #18 make these cards instead, at least in wide screens %>
+

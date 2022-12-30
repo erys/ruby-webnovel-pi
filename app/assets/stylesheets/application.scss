@@ -11,6 +11,11 @@
  * It is generally better to create a new file per style scope.
  *
  */
+
+// custom sass variables
+$min-contrast-ratio:   4.5;
+$enable-negative-margins: true;
+
 @import "minty/variables";
 @import "bootstrap";
 @import "minty/bootswatch";

@@ -4,34 +4,30 @@
 <% content_for :nav do %>
   <%= render 'chapters/nav_top' %>
 <% end %>
-<div class="px-4">
-  <h2><%= @book.tl_title %></h2>
-  <%= nice_form_with model: [@book, @corrupt_chapter] do |form| %>
-    <div class="container mb-4 px-lg-5">
-      <div class="row justify-content-between d-flex flex-row">
-        <div class="col col-md-2">
-          <%= form.ch_number_field class: %w(mb-3) %>
-        </div>
-        <div class="col-auto order-md-last align-self-center">
-          <%= paste_button('#corrupt_chapter_og_text', text: 'Paste JJWXC Text', classes: %w(btn-info mb-3)) %>
-        </div>
-        <div class="col-12 col-md mb-3">
-          <div class="input-group">
-            <%= form.floating_label_text_field :subtitle, "Chapter subtitle" %>
-            <%= paste_button('#corrupt_chapter_subtitle', classes: %w(btn-info), tag_name: :button) %>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <div class="col-12">
-          <%= form.floating_label_text_area :og_text, "JJWXC chapter text", {style: 'height: 300px'}, {class: %w(mb-3)} %>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-auto">
-          <%= form.submit class: 'form-control btn btn-primary' %>
-        </div>
+<h2><%= @book.tl_title %></h2>
+<%= nice_form_with model: [@book, @corrupt_chapter] do |form| %>
+  <div class="row justify-content-between d-flex flex-row">
+    <div class="col col-md-2">
+      <%= form.ch_number_field class: %w(mb-3) %>
+    </div>
+    <div class="col-auto order-md-last align-self-center">
+      <%= paste_button('#corrupt_chapter_og_text', text: 'Paste JJWXC Text', classes: %w(btn-info mb-3)) %>
+    </div>
+    <div class="col-12 col-md mb-3">
+      <div class="input-group">
+        <%= form.floating_label_text_field :subtitle, "Chapter subtitle" %>
+        <%= paste_button('#corrupt_chapter_subtitle', classes: %w(btn-info), tag_name: :button) %>
       </div>
     </div>
-  <% end %>
-</div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-12">
+      <%= form.floating_label_text_area :og_text, "JJWXC chapter text", {style: 'height: 300px'}, {class: %w(mb-3)} %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-auto">
+      <%= form.submit class: 'form-control btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

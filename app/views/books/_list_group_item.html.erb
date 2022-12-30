@@ -1,0 +1,13 @@
+<% classes = "list-group-item list-group-item-action" %>
+<%= link_to book, class: classes do %>
+  <div class="d-flex justify-content-between align-items-center">
+    <%= book.tl_title %>
+
+      <% status_class = "bg-#{book.status_class}" %>
+    <span class="badge <%= status_class %>"><%= book.overall_status %>: <%= book.translation_progress %></span>
+
+  </div>
+  <div class="progress mt-1" style="height: 1px">
+    <%= render partial: 'progress_bar', locals: { book: } %>
+  </div>
+<% end %>

@@ -30,6 +30,8 @@ class Chapter < ApplicationRecord
   has_one_attached :tl_text
   belongs_to :book
 
+  after_create :maybe_inc_book_last_chapter
+
   # TODO: #17 add arc model
 
   def pretty_title
@@ -82,5 +84,14 @@ class Chapter < ApplicationRecord
 
   def next
     book.chapters.find_by(ch_number: ch_number + 1)
+  end
+
+  private
+
+  def maybe_inc_book_last_chapter
+    return if book.last_chapter.present? && book.last_chapter >= ch_number
+
+    book.last_chapter = ch_number
+    book.save
   end
 end

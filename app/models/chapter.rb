@@ -86,7 +86,27 @@ class Chapter < ApplicationRecord
     book.chapters.find_by(ch_number: ch_number + 1)
   end
 
+  def chapter_json
+    json = as_json(except: %i[id book_id])
+    json['og_text']
+  end
+
+  def add_to_archive(zip, dir: nil)
+    copy_to_archive(zip, og_text, File.join(*[dir, 'chinese', "#{ch_number}.txt"].compact_blank))
+    copy_to_archive(zip, tl_text, File.join(*[dir, 'english', "/#{ch_number}.txt"].compact_blank))
+  end
+
   private
+
+  def copy_to_archive(zip, attached, filename)
+    return unless attached.attached?
+
+    zip.write_deflated_file(filename, modification_time: updated_at) do |sink|
+      og_text.download do |chunk|
+        sink << chunk
+      end
+    end
+  end
 
   def maybe_inc_book_last_chapter
     return if book.last_chapter.present? && book.last_chapter >= ch_number

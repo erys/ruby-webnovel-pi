@@ -4,6 +4,10 @@
 #
 
 Rails.application.routes.draw do
+  post 'backup/load', to: 'backup#load_backup'
+  post 'backup/generate', to: 'backup#generate'
+  get 'backup/restore', to: 'backup#restore'
+
   namespace :api do
     resources :original_chapters, only: %i[create]
   end
@@ -15,6 +19,7 @@ Rails.application.routes.draw do
   root 'books#index'
 
   resources :books, param: :short_name do
+    post :backup, on: :member
     resources :chapters, param: :ch_number do
       get :clean, on: :collection
     end

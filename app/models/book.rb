@@ -145,6 +145,18 @@ class Book < ApplicationRecord
     sortable_title.casecmp(other.sortable_title)
   end
 
+  def add_to_zip(zip, dir: nil)
+    zip.write_deflated_file(File.join(*[dir, 'metadata.json'].compact_blank)) { |sink| dump_metadata(sink) }
+    # empty file for typing
+    zip.write_stored_file(File.join(*[dir, 'BOOK'].compact_blank)) { |_| }
+
+    chapters.each { |chapter| chapter.add_to_archive(zip, dir:) }
+  end
+
+  def dump_metadata(file_io)
+    JSON.dump(as_json(except: %i[id author_id], include: [:author, { chapters: { except: %i[id book_id] } }]), file_io)
+  end
+
   private
 
   def create_occurrences

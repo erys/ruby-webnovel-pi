@@ -2,6 +2,9 @@
 
 # Controller for books
 class BooksController < ApplicationController
+  include ZipTricks::RailsStreaming
+  require 'tempfile'
+
   CATEGORIES = {
     current: [Book::READING_ALONG, Book::IN_PROGRESS],
     up_next: [Book::TRANSLATION_PAUSED, Book::PLANNED],
@@ -12,6 +15,9 @@ class BooksController < ApplicationController
 
   DEFAULT_CATEGORY = :current
 
+  before_action :find_book, only: %i[show edit update destroy backup]
+  before_action :sort_chapters, only: %i[show backup]
+
   def index
     @books = Book.all.sort
   end
@@ -20,10 +26,7 @@ class BooksController < ApplicationController
     @book = Book.new
   end
 
-  def show
-    @book = Book.find_by(short_name: params[:short_name])
-    @chapters = @book.chapters.sort_by(&:ch_number)
-  end
+  def show; end
 
   def create
     @author = Author.find_by(og_name: params[:book][:author_cn_name])
@@ -37,12 +40,9 @@ class BooksController < ApplicationController
     end
   end
 
-  def edit
-    @book = Book.find_by(short_name: params[:short_name])
-  end
+  def edit; end
 
   def update
-    @book = Book.find_by(short_name: params[:short_name])
     @author = Author.find_by(og_name: params[:book][:author_cn_name])
     @author = Author.create(og_name: params[:book][:author_cn_name]) if @author.nil?
     @book.update!(book_params)
@@ -50,12 +50,27 @@ class BooksController < ApplicationController
   end
 
   def destroy
-    @book = Book.find_by(short_name: params[:short_name])
     @book.destroy
-    redirect_to root_path
+    redirect_to root_path, status: :see_other
+  end
+
+  def backup
+    response.headers['Content-Disposition'] =
+      "attachment; filename=#{@book.short_name}-#{Time.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
+    zip_tricks_stream do |zip|
+      @book.add_to_zip(zip)
+    end
   end
 
   private
+
+  def find_book
+    @book = Book.find_by(short_name: params[:short_name])
+  end
+
+  def sort_chapters
+    @chapters = @book.chapters.sort_by(&:ch_number)
+  end
 
   def book_params
     inner_params = params.require(:book).permit(:tl_title, :og_title, :description, :short_name,

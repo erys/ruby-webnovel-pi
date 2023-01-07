@@ -6,13 +6,15 @@ class BackupController < ApplicationController
 
   # generates database and chapter backup
   def generate
-    response.headers['Content-Disposition'] =
-      "attachment; filename=webnovel-library-backup-#{Time.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
+    fresh_when Time.current
+    send_file_headers! filename: "webnovel-library-backup-#{Time.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
     zip_tricks_stream do |zip|
-      zip.write_stored_file('LIBRARY') { |_| }
-      Book.all.each do |book|
+      book_dirs = []
+      Book.find_each do |book|
         book.add_to_zip(zip, dir: book.short_name)
+        book_dirs.push(book.short_name)
       end
+      zip.write_deflated_file('LIBRARY') { |sink| sink << book_dirs.join("\n") }
     end
   end
 

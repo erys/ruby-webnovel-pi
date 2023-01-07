@@ -23,5 +23,9 @@
     <% end %>
   <% end %>
 </div>
+
+<div class="col-auto">
+  <%= button_to "Download Backup", backup_generate_path, method: :post, class: %w[btn btn-dark], form: { data: { turbo: false } } %>
+</div>
 <%# TODO: #18 make these cards instead, at least in wide screens %>
 

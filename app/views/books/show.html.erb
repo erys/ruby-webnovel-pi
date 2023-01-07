@@ -42,10 +42,21 @@
   </div>
 </div>
 
-<%= link_to "Delete Book", book_path(@book), class: "btn btn-danger", data: {
-  turbo_method: :delete,
-  turbo_confirm: "Are you sure you want to delete #{@book.tl_title}? This will also delete #{@chapters.size} chapter(s) and cannot be undone"
-} %>
+<div class="row">
+  <div class="col-auto">
+    <%= button_to "Delete Book", @book, method: :delete, class: "btn btn-danger", form: { data: {
+      turbo_confirm: "Are you sure you want to delete #{@book.tl_title}? This will also delete #{@chapters.size} chapter(s) and cannot be undone"
+    } } %>
+  </div>
 
-<%= link_to "All Books", root_path %>
-<%= link_to "Edit", edit_book_path %>
+  <div class="col-auto">
+    <%= button_to "Download Backup", backup_book_path(@book), method: :post, class: %w[btn btn-dark], form: { data: { turbo: false } } %>
+  </div>
+
+  <div class="col-auto">
+    <%= link_to "All Books", root_path, class: %w[btn btn-info] %>
+  </div>
+  <div class="col-auto">
+    <%= link_to "Edit", edit_book_path, class: %w[btn btn-primary] %>
+  </div>
+</div>

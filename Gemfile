@@ -51,6 +51,9 @@ gem 'jquery-rails'
 
 gem 'rack-cors'
 
+# for streaming zip files
+gem 'zip_tricks'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

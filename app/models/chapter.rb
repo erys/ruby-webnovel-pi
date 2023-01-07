@@ -92,8 +92,16 @@ class Chapter < ApplicationRecord
   end
 
   def add_to_archive(zip, dir: nil)
-    copy_to_archive(zip, og_text, File.join(*[dir, 'chinese', "#{ch_number}.txt"].compact_blank))
-    copy_to_archive(zip, tl_text, File.join(*[dir, 'english', "/#{ch_number}.txt"].compact_blank))
+    copy_to_archive(zip, og_text, get_chinese_file_name(dir))
+    copy_to_archive(zip, tl_text, get_english_file_name(dir))
+  end
+
+  def get_english_file_name(dir = nil)
+    File.nice_join(dir, 'english', "#{ch_number}.txt")
+  end
+
+  def get_chinese_file_name(dir = nil)
+    File.nice_join(dir, 'chinese', "#{ch_number}.txt")
   end
 
   private
@@ -102,7 +110,7 @@ class Chapter < ApplicationRecord
     return unless attached.attached?
 
     zip.write_deflated_file(filename, modification_time: updated_at) do |sink|
-      og_text.download do |chunk|
+      attached.download do |chunk|
         sink << chunk
       end
     end

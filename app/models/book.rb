@@ -95,6 +95,10 @@ class Book < ApplicationRecord
     author&.og_name
   end
 
+  def chapter(ch_number)
+    chapters.find_by(ch_number:)
+  end
+
   def source_chapter_count
     return last_chapter if last_chapter.present?
 
@@ -146,9 +150,9 @@ class Book < ApplicationRecord
   end
 
   def add_to_zip(zip, dir: nil)
-    zip.write_deflated_file(File.join(*[dir, 'metadata.json'].compact_blank)) { |sink| dump_metadata(sink) }
+    zip.write_deflated_file(File.nice_join(dir, 'metadata.json')) { |sink| dump_metadata(sink) }
     # empty file for typing
-    zip.write_stored_file(File.join(*[dir, 'BOOK'].compact_blank)) { |_| }
+    zip.write_stored_file(File.nice_join(dir, 'BOOK')) { |_| }
 
     chapters.each { |chapter| chapter.add_to_archive(zip, dir:) }
   end

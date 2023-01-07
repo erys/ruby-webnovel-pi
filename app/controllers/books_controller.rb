@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+require 'zip'
+require 'zip/filesystem'
+
 # Controller for books
 class BooksController < ApplicationController
   include ZipTricks::RailsStreaming
-  require 'tempfile'
 
   CATEGORIES = {
     current: [Book::READING_ALONG, Book::IN_PROGRESS],
@@ -29,8 +31,7 @@ class BooksController < ApplicationController
   def show; end
 
   def create
-    @author = Author.find_by(og_name: params[:book][:author_cn_name])
-    @author = Author.create(og_name: params[:book][:author_cn_name]) if @author.nil?
+    populate_author
     @book = Book.new(book_params)
 
     if @book.save
@@ -43,8 +44,7 @@ class BooksController < ApplicationController
   def edit; end
 
   def update
-    @author = Author.find_by(og_name: params[:book][:author_cn_name])
-    @author = Author.create(og_name: params[:book][:author_cn_name]) if @author.nil?
+    populate_author
     @book.update!(book_params)
     redirect_to @book
   end
@@ -62,7 +62,76 @@ class BooksController < ApplicationController
     end
   end
 
+  def restore
+    Zip::File.open_buffer(params[:backup].to_io) do |zip|
+      if zip.find_entry('LIBRARY')
+        zip.read('LIBRARY').split("\n").each { |short_name| restore_book(zip, short_name) }
+        redirect_to books_path
+      else
+        book = restore_book(zip)
+        redirect_to book
+      end
+    end
+  end
+
   private
+
+  def populate_author
+    @author = maybe_create_author(params[:book][:author_cn_name])
+  end
+
+  def maybe_create_author(og_name)
+    Author.find_by(og_name:) || Author.create(og_name:)
+  end
+
+  def restore_book(zip, dir_name = nil)
+    zip.get_entry(File.nice_join(dir_name, 'BOOK'))
+    metadata_json = JSON.parse(zip.read(File.nice_join(dir_name, 'metadata.json'))).with_indifferent_access
+    book = find_dup_book(metadata_json)
+
+    book_params = metadata_json.slice(*Book.column_names)
+    book_params[:author] = maybe_create_author(metadata_json[:author][:og_name])
+    if book && book.updated_at.iso8601 < metadata_json[:updated_at]
+      book.update!(book_params)
+    elsif book.nil?
+      book = Book.create!(book_params)
+    end
+
+    metadata_json[:chapters].each do |chapter_json|
+      restore_chapter(zip, dir_name, book, chapter_json)
+    end
+    book
+  end
+
+  def find_dup_book(book_metadata)
+    book = nil
+    book = Book.find_by(jjwxc_id: book_metadata[:jjwxc_id]) if book_metadata[:jjwxc_id]
+    book || Book.find_by(og_title: book_metadata[:og_title])
+  end
+
+  def restore_chapter(zip, dir_name, book, ch_metadata)
+    chapter = book.chapter(ch_metadata[:ch_number])
+    return chapter if chapter && (chapter.updated_at.iso8601 >= ch_metadata[:updated_at])
+
+    if chapter
+      chapter.update!(ch_metadata)
+    else
+      ch_metadata[:book] = book
+      chapter = Chapter.create!(ch_metadata)
+    end
+
+    update_chapter_text_from_zip(chapter, dir_name, zip)
+
+    # fix updated_at to match archive since active storage upload touches it
+    chapter.touch(time: ch_metadata[:updated_at])
+  end
+
+  def update_chapter_text_from_zip(chapter, dir_name, zip)
+    english = zip.find_entry(chapter.get_english_file_name(dir_name))
+    chinese = zip.find_entry(chapter.get_chinese_file_name(dir_name))
+    chapter.og_text_data = chinese.get_input_stream.read if chinese
+    chapter.tl_text_data = english.get_input_stream.read if english
+  end
 
   def find_book
     @book = Book.find_by(short_name: params[:short_name])

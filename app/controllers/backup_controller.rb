@@ -17,14 +17,4 @@ class BackupController < ApplicationController
       zip.write_deflated_file('LIBRARY') { |sink| sink << book_dirs.join("\n") }
     end
   end
-
-  # loads data from backup into
-  def load_backup
-
-  end
-
-  # shows restore view
-  def restore
-
-  end
 end

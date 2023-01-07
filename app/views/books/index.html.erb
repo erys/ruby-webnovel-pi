@@ -2,13 +2,13 @@
 
 <ul class="nav nav-tabs" id="bookListTab" role="tablist">
   <% BooksController::CATEGORIES.each do |cat_symbol, _| %>
-    <%= book_list_tab cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY %>
+    <%= tab cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY %>
   <% end %>
 </ul>
 
-<div class="tab-content" id="bookListTabContent">
+<div class="tab-content mb-2" id="bookListTabContent">
   <% BooksController::CATEGORIES.each do |cat_symbol, statuses| %>
-    <%= book_list_tab_pane cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY  do %>
+    <%= tab_pane cat_symbol.to_s, selected: cat_symbol == BooksController::DEFAULT_CATEGORY  do %>
       <% if statuses.blank? %>
         <% tab_books = @books %>
       <% else %>
@@ -18,14 +18,18 @@
         <% tab_books.each do |book| %>
           <%= render partial: 'list_group_item', locals: { book:, new_chapter_button: cat_symbol == :current } %>
         <% end %>
-        <%= link_to "Add Book", new_book_path, class: %w[list-group-item list-group-item-action list-group-item-info]%>
       </div>
     <% end %>
   <% end %>
 </div>
 
-<div class="col-auto">
-  <%= button_to "Download Backup", backup_generate_path, method: :post, class: %w[btn btn-dark], form: { data: { turbo: false } } %>
+<div class="row">
+  <div class="col-auto">
+    <%= link_to "Add Book", new_book_path, class: %w[btn btn-info]%>
+  </div>
+  <div class="col-auto">
+    <%= button_to "Download Backup", backup_generate_path, method: :post, class: %w[btn btn-dark], form: { data: { turbo: false } } %>
+  </div>
 </div>
 <%# TODO: #18 make these cards instead, at least in wide screens %>
 

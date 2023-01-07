@@ -1,3 +1,26 @@
 <h1>Add Book</h1>
 
-<%= render 'form' %>
+<ul class="nav nav-tabs mb-2" id="bookListTab" role="tablist">
+  <%= tab 'New Book', selected: true%>
+  <%= tab 'Restore From Backup', selected: false %>
+</ul>
+<div class="tab-content mb-2" id="bookListTabContent">
+  <%= tab_pane 'New Book', selected: true do %>
+    <%= render 'form' %>
+  <% end %>
+  <%= tab_pane 'Restore From Backup', selected: false do %>
+    <%= nice_form_with url: restore_books_path do |form| %>
+      <div class="row">
+        <div class="mb-3 col-md-auto">
+          <%= form.label :backup, 'Upload backup', class: 'form-label' %>
+          <%= form.file_field :backup, class: 'form-control', required: true %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-auto">
+          <%= form.submit 'Restore', class: 'form-control btn btn-primary'%>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

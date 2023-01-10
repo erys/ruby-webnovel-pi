@@ -5,11 +5,15 @@ class CorruptCharacterList
   include ActiveModel::API
   attr_accessor :all_characters, :index
 
-  delegate :each, :map, to: :@all_characters
+  delegate :each, :map, :length, to: :@all_characters
 
   def initialize(attributes = nil)
     super
     @index ||= 0
+  end
+
+  def progress_percent
+    (index * 100.0) / all_characters.length
   end
 
   def char_to_replace

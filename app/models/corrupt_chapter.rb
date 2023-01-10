@@ -17,7 +17,7 @@ class CorruptChapter
   attr_accessor :og_text, :book_id, :ch_number, :corrupt_chars, :possible_replacements, :possible_chars,
                 :parsed, :id, :subtitle
 
-  delegate :can_undo?, :char_to_replace, :prev_char, :next_char, :done?, to: :@corrupt_chars
+  delegate :can_undo?, :char_to_replace, :prev_char, :next_char, :done?, :progress_percent, to: :@corrupt_chars
 
   def initialize(attributes = nil)
     super

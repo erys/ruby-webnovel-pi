@@ -9,5 +9,5 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "jquery", to: "https://ga.jspm.io/npm:jquery@3.6.1/dist/jquery.js", preload: true
 pin "bootstrap", to: 'bootstrap.min.js', preload: true
-pin "@popperjs/core", to: "popper.js", preload: true
+pin "popper", to: "popper.js", preload: true
 pin "clipboard", to: "https://ga.jspm.io/npm:clipboard@2.0.11/dist/clipboard.js", preload: true

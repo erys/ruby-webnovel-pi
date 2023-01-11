@@ -115,6 +115,10 @@ class Book < ApplicationRecord
     translation_status
   end
 
+  def chapters_sorted
+    @chapters_sorted ||= chapters.sort_by(&:ch_number)
+  end
+
   def status_class
     STATUS_TO_CLASS[overall_status]
   end
@@ -135,6 +139,16 @@ class Book < ApplicationRecord
 
   def latest_chapter
     @latest_chapter ||= chapters.max { |a, b| a.ch_number <=> b.ch_number }
+  end
+
+  def latest_chapter_number
+    latest_chapter&.ch_number || 0
+  end
+
+  def latest_translated_chapter
+    chapters_sorted&.reverse&.find do |chapter|
+      chapter.status == Chapter::TRANSLATED
+    end&.ch_number || 0
   end
 
   def new_chapter_number

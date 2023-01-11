@@ -32,6 +32,19 @@ class Chapter < ApplicationRecord
 
   after_create :maybe_inc_book_last_chapter
 
+  PLACEHOLDER = 'Placeholder'
+  CAPTURED = 'Captured' # not currently used
+  SCRUBBED = 'Scrubbed'
+  TRANSLATED = 'Translated'
+
+  CHAPTER_STATUSES = [PLACEHOLDER, CAPTURED, SCRUBBED, TRANSLATED].freeze
+  STATUS_TO_CLASS = {
+    PLACEHOLDER => 'warning',
+    CAPTURED => 'danger',
+    SCRUBBED => 'info',
+    TRANSLATED => 'success'
+  }.freeze
+
   # TODO: #17 add arc model
 
   def pretty_title
@@ -86,11 +99,6 @@ class Chapter < ApplicationRecord
     book.chapters.find_by(ch_number: ch_number + 1)
   end
 
-  def chapter_json
-    json = as_json(except: %i[id book_id])
-    json['og_text']
-  end
-
   def add_to_archive(zip, dir: nil)
     copy_to_archive(zip, og_text, get_chinese_file_name(dir))
     copy_to_archive(zip, tl_text, get_english_file_name(dir))
@@ -102,6 +110,28 @@ class Chapter < ApplicationRecord
 
   def get_chinese_file_name(dir = nil)
     File.nice_join(dir, 'chinese', "#{ch_number}.txt")
+  end
+
+  def status
+    if og_text? && tl_text?
+      TRANSLATED
+    elsif og_text?
+      SCRUBBED
+    else
+      PLACEHOLDER
+    end
+  end
+
+  def status_class
+    STATUS_TO_CLASS[status]
+  end
+
+  def og_text?
+    @has_og_text ||= og_text.attached? && og_text.byte_size&.positive?
+  end
+
+  def tl_text?
+    @has_tl_text ||= tl_text.attached? && tl_text.byte_size&.positive?
   end
 
   private

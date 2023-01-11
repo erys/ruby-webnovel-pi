@@ -138,7 +138,7 @@ class BooksController < ApplicationController
   end
 
   def sort_chapters
-    @chapters = @book.chapters.sort_by(&:ch_number)
+    @chapters = @book.chapters_sorted
   end
 
   def book_params

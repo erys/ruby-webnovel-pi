@@ -3,7 +3,8 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import jQuery from 'jquery'
 import ClipboardJS from 'clipboard'
-import * as bootstrap from "bootstrap"
+import "popper"
+import 'bootstrap'
 
 window.$ = window.jQuery = jQuery;
 $(document).on('ready turbo:load', function() {
@@ -18,6 +19,11 @@ $(document).on('ready turbo:load', function() {
       $(this).toggleClass('active')
     });
   });
+
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
 
   $(".paste-btn").click(paste_text);
 });

@@ -8,10 +8,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :original_chapters, only: %i[create]
-    resources :corrupt_chapters, only: [] do
-      get 'get_id/:jjwxc_id/:ch_number', to: 'corrupt_chapters#cur_chapter_id', on: :collection
-      get :cur_bytes, on: :member, as: :json
-    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -28,6 +24,13 @@ Rails.application.routes.draw do
     end
     resources :corrupt_chapters, only: %i[new create update edit] do
       patch :undo, on: :member
+    end
+  end
+
+  scope '/api' do
+    resources :corrupt_chapters, only: [] do
+      get 'get_id/:jjwxc_id/:ch_number', to: 'corrupt_chapters#cur_chapter_id', on: :collection
+      get :cur_bytes, on: :member, as: :json
     end
   end
 

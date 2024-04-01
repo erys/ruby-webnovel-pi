@@ -59,11 +59,11 @@ class CorruptChaptersController < ApplicationController
   def cur_chapter_id
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
     id = Rails.cache.read(chapter_id_key(@book.id, params[:ch_number]))
-    render json: id
+    render json: { id: }
   end
 
   def cur_bytes
-    render json: @corrupt_chapter&.char_to_replace || 'DONE'
+    render json: { char: @corrupt_chapter&.char_to_replace || 'DONE' }
   end
 
   def gen_excerpt

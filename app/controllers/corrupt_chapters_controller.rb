@@ -63,7 +63,7 @@ class CorruptChaptersController < ApplicationController
   end
 
   def cur_bytes
-    render json: { char: @corrupt_chapter&.char_to_replace || 'DONE' }
+    render json: { char: @corrupt_chapter&.char_to_replace&.og_bytes || 'DONE' }
   end
 
   def gen_excerpt

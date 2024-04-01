@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     end
     resources :corrupt_chapters, only: %i[new create update edit] do
       patch :undo, on: :member
+      get 'get_id/:jjwxc_id/:ch_number', to: 'corrupt_chapters#cur_chapter_id', on: :collection
+      get :cur_bytes, on: :member, as: :json
     end
   end
 

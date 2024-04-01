@@ -27,6 +27,13 @@ Rails.application.routes.draw do
     end
   end
 
+  scope '/api' do
+    resources :corrupt_chapters, only: [] do
+      get 'get_id/:jjwxc_id/:ch_number', to: 'corrupt_chapters#cur_chapter_id', on: :collection
+      get :cur_bytes, on: :member, as: :json
+    end
+  end
+
   # TODO: #2 author pages
   # TODO: #3 auth required routes
   # TODO: #4 search ability

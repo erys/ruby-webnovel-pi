@@ -1,0 +1,1 @@
+RAILS_SERVE_STATIC_FILES=1 bin/rails s -b 'ssl://0.0.0.0:3000?key=config/ssl/localhost_key.pem&cert=config/ssl/localhost_cert.pem' -e production

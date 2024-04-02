@@ -57,7 +57,7 @@ class CorruptChaptersController < ApplicationController
 
   def new
     @book = Book.find_by(short_name: params[:book_short_name])
-    @corrupt_chapter = CorruptChapter.new(book_id: @book.id)
+    @corrupt_chapter = CorruptChapter.new({ book_id: @book.id }, parts_params: {})
     @corrupt_chapter.ch_number = @book.new_chapter_number
   end
 

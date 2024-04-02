@@ -17,6 +17,11 @@ class CorruptChaptersController < ApplicationController
 
   def create_api
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+    cc_params = create_api_params
+    cc_params[:book_id] = @book.id
+    @corrupt_chapter = init_corrupt_chapter(cc_params)
+    cache_chapter
+    render json: { id: @corrupt_chapter.id }
   end
 
   def edit
@@ -97,7 +102,7 @@ class CorruptChaptersController < ApplicationController
   end
 
   def create_api_params
-    params.require(%i[title main_text substitutions]).permit(:footnote)
+    params.require(%i[title main_text ch_number]).permit(:footnote, :subtitle, :substitutions)
   end
 
   def corrupt_chapter_params

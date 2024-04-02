@@ -43,7 +43,7 @@ class CorruptChapter
   end
 
   def parse_main_text(corrupt_hash)
-    main_text.each_with_index { |char, index| log_occurrence(corrupt_hash, index, char) }
+    main_text.chars.each_with_index { |char, index| log_occurrence(corrupt_hash, index, char) }
   end
 
   def parse

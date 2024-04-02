@@ -99,7 +99,7 @@ class CorruptChaptersController < ApplicationController
 
   # @return [ActionController::Parameters]
   def corrupt_chapter_params
-    params.require(:corrupt_chapter).permit(:ch_number, :subtitle, parts: [])
+    params.require(:corrupt_chapter).permit(:ch_number, :subtitle, parts: {})
   end
 
   def update_params
@@ -140,6 +140,6 @@ class CorruptChaptersController < ApplicationController
                        else
                          Rails.cache.read(params[:id])
                        end
-    @book = Book.find(@corrupt_chapter.book_id)
+    @book = Book.find(@corrupt_chapter.book_id) if @corrupt_chapter
   end
 end

@@ -23,9 +23,10 @@ class CorruptChapterParts
   # @option attributes [String] :footnote Author's note
   # @option attributes [Hash<Integer, String>] :substitutions Uncorrupted text that is stored in ::before or ::after css
   def initialize(attributes = {})
+    og_text = attributes.delete(:og_text)
     super
     # for copy/paste creation
-    parse_og_text(attributes[:og_text]) if attributes[:og_text].present?
+    parse_og_text(og_text) if og_text.present?
   end
 
   CHAPTER_END_STR = '插入书签'
@@ -44,7 +45,7 @@ class CorruptChapterParts
     ch_end = og_text.index(CHAPTER_END_STR) || og_text.length
     @main_text = og_text[ch_start...ch_end]&.strip
     @title = og_text.lines.first&.strip&.force_encoding('utf-8')
-    @footnote = og_text[ch_end...]&.strip
+    @footnote = og_text[ch_end, og_text.length]&.strip
   end
 
   # @return [String]

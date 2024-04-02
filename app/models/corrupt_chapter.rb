@@ -28,9 +28,9 @@ class CorruptChapter
   delegate :can_undo?, :char_to_replace, :prev_char, :next_char, :done?, :progress_percent, to: :corrupt_chars
   delegate :title, :main_text, :substitutions, :footnote, :chapter_text, :display_text, to: :parts
 
-  def initialize(attributes = {})
+  def initialize(attributes, parts_params:)
     super
-    @parts = CorruptChapterParts.new(attributes)
+    @parts = CorruptChapterParts.new(parts_params)
     @id = SecureRandom.uuid
   end
 

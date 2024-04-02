@@ -8,18 +8,14 @@ class CorruptChaptersController < ApplicationController
     # TODO: #12 add check on ch_number
     # TODO: #13 add ability to overwrite existing chapter
     @book = Book.find_by(short_name: params[:book_short_name])
-    cc_params = corrupt_chapter_params
-    cc_params[:book_id] = @book.id
-    @corrupt_chapter = init_corrupt_chapter(cc_params)
+    @corrupt_chapter = init_corrupt_chapter(parts_params_og)
     cache_chapter
     redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
   end
 
   def create_api
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
-    cc_params = create_api_params
-    cc_params[:book_id] = @book.id
-    @corrupt_chapter = init_corrupt_chapter(cc_params)
+    @corrupt_chapter = init_corrupt_chapter(parts_params_api)
     cache_chapter
     render json: { id: @corrupt_chapter.id }
   end
@@ -101,23 +97,30 @@ class CorruptChaptersController < ApplicationController
     redirect_to(edit_book_chapter_path(@book, @chapter))
   end
 
-  def create_api_params
-    params.require(%i[title main_text ch_number]).permit(:footnote, :subtitle, :substitutions)
+  def parts_params_og
+    params.require(:og_text)
+  end
+
+  def parts_params_api
+    params.require(%i[title main_text]).permit(:substitutions, :footnote)
   end
 
   def corrupt_chapter_params
-    params.require(:corrupt_chapter).permit(:og_text, :ch_number, :subtitle)
+    params.require(%i[corrupt_chapter ch_number]).permit(:subtitle)
   end
 
   def update_params
     params.require(:corrupt_chapter).permit(:replacement)
   end
 
-  def init_corrupt_chapter(cc_params)
+  def init_corrupt_chapter(parts_params)
+    cc_params = corrupt_chapter_params
+    cc_params[:book_id] = @book.id
+
     if Rails.env.development?
-      CorruptChapterJson.new(cc_params)
+      CorruptChapterJson.new(cc_params, parts_params:)
     else
-      CorruptChapter.new(cc_params)
+      CorruptChapter.new(cc_params, parts_params:)
     end
   end
 

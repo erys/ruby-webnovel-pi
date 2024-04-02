@@ -22,7 +22,9 @@
   </div>
   <div class="row mb-2">
     <div class="col-12">
-      <%= form.floating_label_text_area :og_text, "JJWXC chapter text", {style: 'height: 300px'}, {class: %w(mb-3)} %>
+      <%= form.fields_for :parts do |parts_form| %>
+        <%= parts_form.floating_label_text_area :og_text, "JJWXC chapter text", {style: 'height: 300px'}, {class: %w(mb-3)} %>
+      <% end %>
     </div>
   </div>
   <div class="row">

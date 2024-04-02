@@ -9,20 +9,20 @@ class CorruptChaptersController < ApplicationController
     # TODO: #13 add ability to overwrite existing chapter
     @book = Book.find_by(short_name: params[:book_short_name])
     @corrupt_chapter = init_corrupt_chapter
-    cache_chapter
+    helpers.cache_chapter
     redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
   end
 
   def create_api
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
     @corrupt_chapter = init_corrupt_chapter
-    cache_chapter
+    helpers.cache_chapter
     render json: { id: @corrupt_chapter.id }
   end
 
   def edit
     @corrupt_chapter.parse
-    cache_chapter
+    helpers.cache_chapter
     if @corrupt_chapter.done?
       finish_chapter
     else
@@ -39,7 +39,7 @@ class CorruptChaptersController < ApplicationController
         finish_chapter
         return
       end
-      cache_chapter
+      helpers.cache_chapter
     end
     redirect_to(edit_book_corrupt_chapter_path)
   end
@@ -51,7 +51,7 @@ class CorruptChaptersController < ApplicationController
     else
       flash[:undo_failure] = 'No replacements to undo'
     end
-    cache_chapter
+    helpers.cache_chapter
     redirect_to edit_book_corrupt_chapter_path
   end
 
@@ -63,7 +63,7 @@ class CorruptChaptersController < ApplicationController
 
   def cur_chapter_id
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
-    id = corrupt_chapter_id(params[:ch_number])
+    id = helpers.corrupt_chapter_id(params[:ch_number])
     render json: { id: }
   end
 

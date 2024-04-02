@@ -83,7 +83,7 @@ class CorruptChapter
     register_occurrences
     chapter = Chapter.new(book_id:, ch_number:, og_subtitle: subtitle,
                           og_title: title)
-    chapter.og_text_data = main_text
+    chapter.og_text_data = chapter_text
     chapter
   end
 

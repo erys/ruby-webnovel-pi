@@ -29,7 +29,7 @@ class CorruptChapter
   delegate :title, :main_text, :substitutions, :footnote, :chapter_text, :display_text, to: :parts
 
   def initialize(attributes, parts_params:)
-    super
+    super(attributes)
     @parts = CorruptChapterParts.new(parts_params)
     @id = SecureRandom.uuid
   end

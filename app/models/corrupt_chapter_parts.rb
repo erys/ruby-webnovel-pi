@@ -26,7 +26,13 @@ class CorruptChapterParts
     og_text = attributes.delete(:og_text)
     super
     # for copy/paste creation
-    parse_og_text(og_text) if og_text.present?
+    if og_text.present?
+      parse_og_text(og_text)
+    else
+      main_text.gsub!(JJWXC_TEXT, '') if main_text.present?
+      footnote.gsub!(ACK_REGEX, "\\1\n[truncated]\n#{ACK_END}") if footnote.present?
+    end
+
   end
 
   CHAPTER_END_STR = '插入书签'

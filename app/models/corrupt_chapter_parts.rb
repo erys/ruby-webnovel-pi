@@ -6,13 +6,13 @@ class CorruptChapterParts
   include ActiveModel::Serializers::JSON
 
   # @return [String]
-  attr_reader :title
+  attr_accessor :title
   # @return [String]
-  attr_reader :main_text
+  attr_accessor :main_text
   # @return [Hash{Integer=>String}]
-  attr_reader :substitutions
+  attr_accessor :substitutions
   # @return [String, NilClass]
-  attr_reader :footnote
+  attr_accessor :footnote
 
   SUBSTITUTION_STRING = 'SUBSTITUTE_ME_%d'
 

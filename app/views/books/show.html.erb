@@ -36,7 +36,11 @@
           <% classes = "list-group-item list-group-item-action" %>
           <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
         <% end %>
+        <% corrupt_id = corrupt_chapter_id %>
         <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
+        <% if corrupt_id %>
+          <%= link_to "Resume cleaning chapter", edit_book_corrupt_chapter_path(@book, corrupt_id), class: "list-group-item list-group-item-action list-group-item-info" %>
+        <% end %>
       </div>
     </div>
   </div>

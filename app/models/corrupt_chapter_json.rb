@@ -5,7 +5,6 @@ class CorruptChapterJson < CorruptChapter
   include ActiveModel::Serializers::JSON
 
   JSON_SYMBOLS = %i[
-    og_text
     book_id
     ch_number
     possible_replacements
@@ -15,9 +14,10 @@ class CorruptChapterJson < CorruptChapter
     parsed
     id
     subtitle
+    parts_json
   ].freeze
 
-  attr_accessor :corrupt_chars_json, :corrupt_chars_index
+  attr_accessor :corrupt_chars_json, :corrupt_chars_index, :parts_json
 
   def attributes
     JSON_SYMBOLS.map do |symbol|
@@ -28,12 +28,14 @@ class CorruptChapterJson < CorruptChapter
   def to_json(*_args)
     @corrupt_chars_json = corrupt_chars&.map(&:serializable_hash)
     @corrupt_chars_index = corrupt_chars&.index
+    @parts_json = parts.to_json
     super
   end
 
   class << self
     def from_json(json_string)
       chap = new.from_json(json_string)
+      chap.parts = CorruptChapterParts.new(chap.parts_json)
       chap.corrupt_chars = CorruptCharacterList.new(
         all_characters: chap.corrupt_chars_json&.map { |hash| CorruptCharacter.new(hash) },
         index: chap.corrupt_chars_index

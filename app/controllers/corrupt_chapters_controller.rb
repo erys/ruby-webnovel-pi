@@ -15,6 +15,10 @@ class CorruptChaptersController < ApplicationController
     redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
   end
 
+  def create_api
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+  end
+
   def edit
     @corrupt_chapter.parse
     cache_chapter
@@ -68,7 +72,7 @@ class CorruptChaptersController < ApplicationController
 
   def gen_excerpt
     @excerpt = view_context.excerpt(
-      @corrupt_chapter.og_text,
+      @corrupt_chapter.display_text,
       @corrupt_chapter.char_to_replace.og_bytes,
       radius: 50
     )
@@ -90,6 +94,10 @@ class CorruptChaptersController < ApplicationController
     Rails.cache.delete(@corrupt_chapter.id)
     flash[:last_action] = 'clean'
     redirect_to(edit_book_chapter_path(@book, @chapter))
+  end
+
+  def create_api_params
+    params.require(%i[title main_text substitutions]).permit(:footnote)
   end
 
   def corrupt_chapter_params

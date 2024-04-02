@@ -3,7 +3,7 @@
 # Controller for corrupt chapters
 class CorruptChaptersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create_api
-  before_action :fetch_chapter, only: %i[edit cur_bytes undo update]
+  before_action :fetch_chapter, only: %i[edit undo update]
   def create
     # TODO: #12 add check on ch_number
     # TODO: #13 add ability to overwrite existing chapter
@@ -61,13 +61,14 @@ class CorruptChaptersController < ApplicationController
     @corrupt_chapter.ch_number = @book.new_chapter_number
   end
 
-  def cur_chapter_id
+  def cur_bytes
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
     id = helpers.corrupt_chapter_id(params[:ch_number])
-    render json: { id: }
-  end
-
-  def cur_bytes
+    if id.blank?
+      render json: { char: nil }
+      return
+    end
+    fetch_chapter(id)
     render json: { char: @corrupt_chapter&.char_to_replace&.og_bytes || 'DONE' }
   end
 
@@ -84,10 +85,6 @@ class CorruptChaptersController < ApplicationController
   end
 
   private
-
-  def fetch_id_params
-    params.require(%i[jjwxc_id ch_number])
-  end
 
   def finish_chapter
     @chapter = @corrupt_chapter.init_chapter
@@ -118,11 +115,11 @@ class CorruptChaptersController < ApplicationController
     end
   end
 
-  def fetch_chapter
+  def fetch_chapter(id = params[:id])
     @corrupt_chapter = if Rails.env.development?
-                         CorruptChapterJson.from_json(Rails.cache.read(params[:id]))
+                         CorruptChapterJson.from_json(Rails.cache.read(id))
                        else
-                         Rails.cache.read(params[:id])
+                         Rails.cache.read(id)
                        end
     @book = Book.find(@corrupt_chapter.book_id) if @corrupt_chapter
   end

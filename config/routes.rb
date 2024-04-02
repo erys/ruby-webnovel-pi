@@ -29,8 +29,7 @@ Rails.application.routes.draw do
 
   scope '/api' do
     resources :corrupt_chapters, only: [] do
-      get 'get_id/:jjwxc_id/:ch_number', to: 'corrupt_chapters#cur_chapter_id', on: :collection
-      get :cur_bytes, on: :member, as: :json
+      get 'cur_bytes/:jjwxc_id/:ch_number', to: 'corrupt_chapters#cur_bytes', on: :collection
       post ':jjwxc_id/:ch_number', to: 'corrupt_chapters#create_api', on: :collection
     end
   end

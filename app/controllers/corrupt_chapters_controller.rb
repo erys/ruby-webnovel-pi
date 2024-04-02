@@ -97,8 +97,9 @@ class CorruptChaptersController < ApplicationController
     redirect_to(edit_book_chapter_path(@book, @chapter))
   end
 
+  # @return [ActionController::Parameters]
   def corrupt_chapter_params
-    params.require(:corrupt_chapter).permit(:ch_number, :subtitle)
+    params.require(:corrupt_chapter).permit(:ch_number, :subtitle, parts: [])
   end
 
   def update_params
@@ -108,11 +109,12 @@ class CorruptChaptersController < ApplicationController
   def init_corrupt_chapter
     cc_params = corrupt_chapter_params
     cc_params[:book_id] = @book.id
+    parts_params = cc_params.delete(:parts)
 
     if Rails.env.development?
-      CorruptChapterJson.new(cc_params, parts_params: params[:corrupt_chapter][:parts])
+      CorruptChapterJson.new(cc_params, parts_params:)
     else
-      CorruptChapter.new(cc_params, parts_params: params[:corrupt_chapter][:parts])
+      CorruptChapter.new(cc_params, parts_params:)
     end
   end
 

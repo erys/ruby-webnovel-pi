@@ -14,7 +14,7 @@ class CorruptChapterParts
   # @return [String, NilClass]
   attr_reader :footnote
 
-  SUBSTITUTION_STRING = 'SUBSTITUTE_ME_%03d'
+  SUBSTITUTION_STRING = 'SUBSTITUTE_ME_%d'
 
   # @param [Hash] attributes
   # @option attributes [String] :og_text Full chapter text for use with copy/paste method

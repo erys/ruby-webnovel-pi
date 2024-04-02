@@ -63,7 +63,7 @@ class CorruptChaptersController < ApplicationController
 
   def cur_chapter_id
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
-    id = corrupt_chapter_id
+    id = corrupt_chapter_id(params[:ch_number])
     render json: { id: }
   end
 
@@ -116,10 +116,6 @@ class CorruptChaptersController < ApplicationController
     else
       CorruptChapter.new(cc_params, parts_params:)
     end
-  end
-
-  def chapter_id_key(book_id, ch_number)
-    "book #{book_id}, chapter #{ch_number}"
   end
 
   def fetch_chapter

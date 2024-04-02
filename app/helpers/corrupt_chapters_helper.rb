@@ -2,8 +2,12 @@
 
 # Corrupt Chapter helpers
 module CorruptChaptersHelper
-  def corrupt_chapter_id
-    Rails.cache.read(chapter_id_key(@book.id, params[:ch_number]))
+  def chapter_id_key(book_id, ch_number)
+    "book #{book_id}, chapter #{ch_number}"
+  end
+
+  def corrupt_chapter_id(ch_number)
+    Rails.cache.read(chapter_id_key(@book.id, ch_number))
   end
 
   def cache_chapter

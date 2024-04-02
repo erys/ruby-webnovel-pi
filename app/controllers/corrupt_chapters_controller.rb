@@ -98,7 +98,7 @@ class CorruptChaptersController < ApplicationController
   end
 
   def corrupt_chapter_params
-    params.require(:corrupt_chapter).permit(:ch_number, :subtitle, parts: {})
+    params.require(:corrupt_chapter).permit(:ch_number, :subtitle)
   end
 
   def update_params
@@ -110,9 +110,9 @@ class CorruptChaptersController < ApplicationController
     cc_params[:book_id] = @book.id
 
     if Rails.env.development?
-      CorruptChapterJson.new(cc_params, parts_params: cc_params[:parts])
+      CorruptChapterJson.new(cc_params, parts_params: params[:corrupt_chapter][:parts])
     else
-      CorruptChapter.new(cc_params, parts_params: cc_params[:parts])
+      CorruptChapter.new(cc_params, parts_params: params[:corrupt_chapter][:parts])
     end
   end
 

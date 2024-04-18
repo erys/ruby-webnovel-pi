@@ -2,22 +2,27 @@
 
 # Controller for corrupt chapters
 class CorruptChaptersController < ApplicationController
-
-  before_action :fetch_chapter, only: %i[edit cur_bytes undo update]
+  skip_before_action :verify_authenticity_token, only: :create_api
+  before_action :fetch_chapter, only: %i[edit undo update]
   def create
     # TODO: #12 add check on ch_number
     # TODO: #13 add ability to overwrite existing chapter
     @book = Book.find_by(short_name: params[:book_short_name])
-    cc_params = corrupt_chapter_params
-    cc_params[:book_id] = @book.id
-    @corrupt_chapter = init_corrupt_chapter(cc_params)
-    cache_chapter
+    @corrupt_chapter = init_corrupt_chapter
+    helpers.cache_chapter
     redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
+  end
+
+  def create_api
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+    @corrupt_chapter = init_corrupt_chapter
+    helpers.cache_chapter
+    render json: { id: @corrupt_chapter.id }
   end
 
   def edit
     @corrupt_chapter.parse
-    cache_chapter
+    helpers.cache_chapter
     if @corrupt_chapter.done?
       finish_chapter
     else
@@ -34,7 +39,7 @@ class CorruptChaptersController < ApplicationController
         finish_chapter
         return
       end
-      cache_chapter
+      helpers.cache_chapter
     end
     redirect_to(edit_book_corrupt_chapter_path)
   end
@@ -46,29 +51,30 @@ class CorruptChaptersController < ApplicationController
     else
       flash[:undo_failure] = 'No replacements to undo'
     end
-    cache_chapter
+    helpers.cache_chapter
     redirect_to edit_book_corrupt_chapter_path
   end
 
   def new
     @book = Book.find_by(short_name: params[:book_short_name])
-    @corrupt_chapter = CorruptChapter.new(book_id: @book.id)
+    @corrupt_chapter = CorruptChapter.new({ book_id: @book.id }, parts_params: {})
     @corrupt_chapter.ch_number = @book.new_chapter_number
   end
 
-  def cur_chapter_id
-    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
-    id = Rails.cache.read(chapter_id_key(@book.id, params[:ch_number]))
-    render json: { id: }
-  end
-
   def cur_bytes
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+    id = helpers.corrupt_chapter_id(params[:ch_number])
+    if id.blank?
+      render json: { char: nil }
+      return
+    end
+    fetch_chapter(id)
     render json: { char: @corrupt_chapter&.char_to_replace&.og_bytes || 'DONE' }
   end
 
   def gen_excerpt
     @excerpt = view_context.excerpt(
-      @corrupt_chapter.og_text,
+      @corrupt_chapter.display_text,
       @corrupt_chapter.char_to_replace.og_bytes,
       radius: 50
     )
@@ -80,10 +86,6 @@ class CorruptChaptersController < ApplicationController
 
   private
 
-  def fetch_id_params
-    params.require(%i[jjwxc_id ch_number])
-  end
-
   def finish_chapter
     @chapter = @corrupt_chapter.init_chapter
     @chapter.save!
@@ -92,44 +94,33 @@ class CorruptChaptersController < ApplicationController
     redirect_to(edit_book_chapter_path(@book, @chapter))
   end
 
+  # @return [ActionController::Parameters]
   def corrupt_chapter_params
-    params.require(:corrupt_chapter).permit(:og_text, :ch_number, :subtitle)
+    params.require(:corrupt_chapter).permit(:ch_number, :subtitle, parts: {})
   end
 
   def update_params
     params.require(:corrupt_chapter).permit(:replacement)
   end
 
-  def init_corrupt_chapter(cc_params)
+  def init_corrupt_chapter
+    cc_params = corrupt_chapter_params
+    cc_params[:book_id] = @book.id
+    parts_params = cc_params.delete(:parts)
+
     if Rails.env.development?
-      CorruptChapterJson.new(cc_params)
+      CorruptChapterJson.new(cc_params, parts_params:)
     else
-      CorruptChapter.new(cc_params)
+      CorruptChapter.new(cc_params, parts_params:)
     end
   end
 
-  def chapter_id_key(book_id, ch_number)
-    "book #{book_id}, chapter #{ch_number}"
-  end
-
-  def cache_chapter
-    Rails.cache.write(chapter_id_key(@corrupt_chapter.book_id, @corrupt_chapter.ch_number),
-                      @corrupt_chapter.id,
-                      expires_in: 6.hours)
-
-    if Rails.env.development?
-      Rails.cache.write(@corrupt_chapter.id, @corrupt_chapter.to_json)
-    else
-      Rails.cache.write(@corrupt_chapter.id, @corrupt_chapter, expires_in: 6.hours)
-    end
-  end
-
-  def fetch_chapter
+  def fetch_chapter(id = params[:id])
     @corrupt_chapter = if Rails.env.development?
-                         CorruptChapterJson.from_json(Rails.cache.read(params[:id]))
+                         CorruptChapterJson.from_json(Rails.cache.read(id))
                        else
-                         Rails.cache.read(params[:id])
+                         Rails.cache.read(id)
                        end
-    @book = Book.find(@corrupt_chapter.book_id)
+    @book = Book.find(@corrupt_chapter.book_id) if @corrupt_chapter
   end
 end

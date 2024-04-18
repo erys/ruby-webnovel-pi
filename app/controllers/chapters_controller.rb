@@ -2,23 +2,21 @@
 
 # Controller for chapters
 class ChaptersController < ApplicationController
+  before_action :find_book, except: :set_subtitle
   # TODO: #11 find/replace on english text
   #   option 1: part of normal text edit
   #   option 2: set auto find replace on a per book basis (useful for names, i.e. Lin Samuel -> Lin Huai)
   #   this would either auto replace on save, or would be a button that would give interactive view
   def show
-    find_book
     init_chapters
   end
 
   def new
-    find_book
     @chapter = Chapter.new
     @chapter.ch_number = @book.new_chapter_number
   end
 
   def create
-    find_book
     @chapter = Chapter.new(**chapter_params, book_id: @book.id)
     unless @chapter.save
       render :new, status: :unprocessable_entity
@@ -34,12 +32,10 @@ class ChaptersController < ApplicationController
   # end
 
   def edit
-    find_book
     init_chapters
   end
 
   def update
-    find_book
     init_chapters
 
     @chapter.update(chapter_params)
@@ -48,10 +44,30 @@ class ChaptersController < ApplicationController
     save_redirect
   end
 
+  def set_subtitle
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+    init_chapters
+
+    return render status: :not_found, json: {} unless @chapter
+
+    return render status: :conflict, json: {} if @chapter.og_subtitle.present?
+
+    @chapter.update(subtitle_params)
+    if @chapter.save
+      render status: :ok, json: {}
+    else
+      render status: :internal_server_error, json: { errors: @chapter.errors }
+    end
+  end
+
   # TODO: #9 side by side text edit with chinese, keeping lines together
   # TODO: #10 rich text or markdown editing
 
   private
+
+  def subtitle_params
+    params.require(:chapter).permit(:og_subtitle)
+  end
 
   def find_book
     @book = Book.find_by(short_name: params[:book_short_name])
@@ -62,7 +78,12 @@ class ChaptersController < ApplicationController
     when '& continue'
       redirect_to edit_book_chapter_path(@book, @chapter)
     when '& clean'
-      redirect_to new_book_corrupt_chapter_path(@book)
+      corrupt_id = helpers.corrupt_chapter_id(@book.new_chapter_number)
+      if corrupt_id && Rails.cache.read(corrupt_id)
+        redirect_to edit_book_corrupt_chapter_path(@book, corrupt_id)
+      else
+        redirect_to new_book_corrupt_chapter_path(@book)
+      end
     when '& edit next'
       redirect_to edit_book_chapter_path(@book, @next)
     else

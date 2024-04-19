@@ -33,7 +33,7 @@ class OriginalChaptersController < ApplicationController
       :substitutions,
       :title
     )
-    og_chap_params[:book] = Book.find_by(jjwxc_id: params[:novel_id])
+    og_chap_params[:book] = Book.find_by(jjwxc_id: params[:jjwxc_id])
     og_chap_params
   end
 end

@@ -2,7 +2,7 @@
 
 # Controller for corrupt chapters
 class CorruptChaptersController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:create_api, :destroy]
+  skip_before_action :verify_authenticity_token, only: :create_api
   before_action :fetch_chapter, only: %i[edit undo update]
   def create
     # TODO: #12 add check on ch_number
@@ -14,7 +14,7 @@ class CorruptChaptersController < ApplicationController
   end
 
   def destroy
-    Rails.cache.delete(id)
+    Rails.cache.delete(params[:id])
 
     redirect_to book_path(@book), status: :see_other
   end

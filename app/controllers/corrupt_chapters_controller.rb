@@ -121,6 +121,7 @@ class CorruptChaptersController < ApplicationController
                        else
                          Rails.cache.read(id)
                        end
+    Rails.cache.delete(id) unless @corrupt_chapter&.book_id
     @book = Book.find(@corrupt_chapter.book_id) if @corrupt_chapter
   end
 end

@@ -17,13 +17,7 @@ module CorruptChaptersHelper
     if corrupt_id && Rails.cache.read(corrupt_id)
       edit_book_corrupt_chapter_path(@book, corrupt_id)
     else
-      og_chapter = OriginalChapter.where(book: @book, ch_number:).order(updated_at: :desc).first
-      if og_chapter
-        clean_book_original_chapter_path(@book, og_chapter)
-      else
-
-        new_book_corrupt_chapter_path(@book)
-      end
+      clean_book_original_chapter_path(@book, ch_number)
     end
   end
 

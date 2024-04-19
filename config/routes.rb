@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     resources :corrupt_chapters, only: %i[new create update edit destroy] do
       patch :undo, on: :member
     end
-    resources :original_chapters, only: [] do
+    resources :original_chapters, only: [], param: :ch_number do
       get :clean, on: :member
     end
   end

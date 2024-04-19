@@ -19,10 +19,15 @@ class OriginalChaptersController < ApplicationController
   end
 
   def clean
-    @original_chapter = OriginalChapter.find(params[:id])
-    @book = @original_chapter.book
+    @book = Book.find_by_short_name(params[:book_short_name])
+    @original_chapter = OriginalChapter.where(book: @book, ch_number: @params[:ch_number]).order(created_at: :desc).first
+    unless @original_chapter
+      redirect_to new_book_corrupt_chapter_path(@book)
+      return
+    end
+
     @corrupt_chapter = @original_chapter.as_corrupt_chapter
-    cache_chapter
+    helpers.cache_chapter
 
     redirect_to edit_book_corrupt_chapter_path(@book, @corrupt_chapter.id)
   end

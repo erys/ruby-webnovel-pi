@@ -3,15 +3,14 @@
 module Api
   # api only controller for original chapters
   class OriginalChaptersController < ApplicationController
-
-    # POST /api/original_chapters
-    # POST /api/original_chapters.json
     def create
       @original_chapter = OriginalChapter.new(original_chapter_params)
 
-      @original_chapter.html_data = params[:original_chapter][:html]
       if @original_chapter.save
-        render json: { book: @original_chapter.book.tl_title, ch_number: @original_chapter.ch_number },
+        @original_chapter.download_font
+        render json: { book: @original_chapter.book.tl_title,
+                       ch_number: @original_chapter.ch_number,
+                       font: url_for(@original_chapter.font_file) },
                status: :created,
                location: @original_chapter
       else
@@ -23,8 +22,16 @@ module Api
 
     # Only allow a list of trusted parameters through.
     def original_chapter_params
-      og_chap_params = params.require(:original_chapter).permit(:ch_number, :link)
-      og_chap_params[:book] = Book.find_by(jjwxc_id: params[:original_chapter][:novel_id])
+      og_chap_params = params.require(:original_chapter).permit(
+        :ch_number,
+        :link,
+        :authors_note,
+        :font_name,
+        :original_text,
+        :subtitle,
+        :title
+      )
+      og_chap_params[:book] = Book.find_by(jjwxc_id: params[:novel_id])
       og_chap_params
     end
   end

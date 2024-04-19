@@ -9,7 +9,7 @@ class CorruptChapterParts
   attr_accessor :title
   # @return [String]
   attr_accessor :main_text
-  # @return [Hash{Integer=>String}]
+  # @return [Array<String>]
   attr_accessor :substitutions
   # @return [String, NilClass]
   attr_accessor :footnote
@@ -21,7 +21,7 @@ class CorruptChapterParts
   # @option attributes [String] :title Title of chapter
   # @option attributes [String] :main_text Main text of chapter containing corrupt characters
   # @option attributes [String] :footnote Author's note
-  # @option attributes [Hash<Integer, String>] :substitutions Uncorrupted text that is stored in ::before or ::after css
+  # @option attributes [Array<String>] :substitutions Uncorrupted text that is stored in ::before or ::after css
   def initialize(attributes = {})
     og_text = attributes.delete(:og_text)
     super
@@ -32,7 +32,6 @@ class CorruptChapterParts
       main_text.gsub!(JJWXC_TEXT, '') if main_text.present?
       footnote.gsub!(ACK_REGEX, "\\1\n[truncated]\n#{ACK_END}") if footnote.present?
     end
-
   end
 
   CHAPTER_END_STR = '插入书签'
@@ -60,7 +59,7 @@ class CorruptChapterParts
 
     new_text = main_text
 
-    substitutions.each do |key, value|
+    substitutions.each_with_index do |value, key|
       new_text = new_text.gsub(SUBSTITUTION_STRING % key, value)
     end
 

@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   post 'backup/generate', to: 'backup#generate'
 
   namespace :api do
-    resources :original_chapters, only: %i[create]
+    resources :original_chapters, only: [] do
+      post ':jjwxc_id/:ch_number/', to: 'api/original_chapters#create', on: :collection
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -34,7 +36,7 @@ Rails.application.routes.draw do
     end
 
     resources :chapters, only: [] do
-      patch ':jjwxc_id:/:ch_number/set_subtitle', to: 'chapters#set_subtitle', on: :collection
+      patch ':jjwxc_id/:ch_number/set_subtitle', to: 'chapters#set_subtitle', on: :collection
     end
   end
 

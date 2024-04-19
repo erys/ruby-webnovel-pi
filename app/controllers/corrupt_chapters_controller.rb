@@ -16,7 +16,7 @@ class CorruptChaptersController < ApplicationController
   def destroy
     Rails.cache.delete(id)
 
-    redirect_to book_path(@book)
+    redirect_to book_path(@book), status: :see_other
   end
 
   def create_api

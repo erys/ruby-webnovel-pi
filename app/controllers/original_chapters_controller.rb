@@ -5,7 +5,6 @@ class OriginalChaptersController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    Rails.logger.info(original_chapter_params)
     @original_chapter = OriginalChapter.new(original_chapter_params)
 
     if @original_chapter.save
@@ -39,8 +38,8 @@ class OriginalChaptersController < ApplicationController
       :font_name,
       :main_text,
       :subtitle,
-      :substitutions,
-      :title
+      :title,
+      substitutions: []
     )
     og_chap_params[:book] = Book.find_by(jjwxc_id: params[:jjwxc_id])
     og_chap_params

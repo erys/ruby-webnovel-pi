@@ -78,12 +78,7 @@ class ChaptersController < ApplicationController
     when '& continue'
       redirect_to edit_book_chapter_path(@book, @chapter)
     when '& clean'
-      corrupt_id = helpers.corrupt_chapter_id(@book.new_chapter_number)
-      if corrupt_id && Rails.cache.read(corrupt_id)
-        redirect_to edit_book_corrupt_chapter_path(@book, corrupt_id)
-      else
-        redirect_to new_book_corrupt_chapter_path(@book)
-      end
+      redirect_to helpers.clean_chapter_url
     when '& edit next'
       redirect_to edit_book_chapter_path(@book, @next)
     else

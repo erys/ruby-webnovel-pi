@@ -38,7 +38,8 @@ class OriginalChapter < ApplicationRecord
     font_file.attach(
       io: URI.open("https://static.jjwxc.net/tmp/fonts/#{font_name}.woff2?h=my.jjwxc.net"),
       content_type: 'font/woff2',
-      file_name: 'font.woff2'
+      filename: 'font.woff2',
+      identify: false,
     )
   end
 

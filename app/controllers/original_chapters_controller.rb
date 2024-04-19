@@ -12,8 +12,7 @@ class OriginalChaptersController < ApplicationController
       render json: { book: @original_chapter.book.tl_title,
                      ch_number: @original_chapter.ch_number,
                      font: @original_chapter.font_file.attached? ? url_for(@original_chapter.font_file) : nil },
-             status: :created,
-             location: @original_chapter
+             status: :created
     else
       render json: @original_chapter.errors, status: :unprocessable_entity
     end

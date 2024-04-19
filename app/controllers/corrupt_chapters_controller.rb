@@ -15,6 +15,7 @@ class CorruptChaptersController < ApplicationController
 
   def destroy
     Rails.cache.delete(params[:id])
+    @book = Book.find_by(short_name: params[:book_short_name])
 
     redirect_to book_path(@book), status: :see_other
   end

@@ -24,7 +24,8 @@
 # Foreign Keys
 #
 #  fk_rails_...  (book_id => books.id)
-#
+
+require 'open-uri'
 class OriginalChapter < ApplicationRecord
   belongs_to :book
   has_one_attached :html
@@ -35,7 +36,7 @@ class OriginalChapter < ApplicationRecord
     return if font_file.attached? && !force
 
     font_file.attach(
-      io: File.open("https://static.jjwxc.net/tmp/fonts/#{font_name}.woff2?h=my.jjwxc.net"),
+      io: URI.open("https://static.jjwxc.net/tmp/fonts/#{font_name}.woff2?h=my.jjwxc.net"),
       content_type: 'font/woff2',
       file_name: 'font.woff2'
     )

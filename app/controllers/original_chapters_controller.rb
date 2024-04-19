@@ -11,7 +11,7 @@ class OriginalChaptersController < ApplicationController
       @original_chapter.download_font
       render json: { book: @original_chapter.book.tl_title,
                      ch_number: @original_chapter.ch_number,
-                     font: url_for(@original_chapter.font_file) },
+                     font: @original_chapter.font_file.attached? ? (@original_chapter.font_file) : nil },
              status: :created,
              location: @original_chapter
     else

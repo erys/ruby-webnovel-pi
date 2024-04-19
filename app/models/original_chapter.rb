@@ -56,6 +56,7 @@ class OriginalChapter < ApplicationRecord
   end
 
   def as_corrupt_chapter
+    Rails.logger.info(substitutions)
     CorruptChapter.new({ ch_number:, subtitle:, book_id: }, parts_params: { title:, main_text:, footnote:, substitutions: })
   end
 

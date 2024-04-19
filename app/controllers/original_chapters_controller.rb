@@ -2,6 +2,8 @@
 
 # api only controller for original chapters
 class OriginalChaptersController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def create
     @original_chapter = OriginalChapter.new(original_chapter_params)
 

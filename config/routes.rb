@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     resources :corrupt_chapters, only: %i[new create update edit destroy] do
       patch :undo, on: :member
     end
+    resources :original_chapters, only: [] do
+      get :clean, on: :member
+    end
   end
 
   scope '/api' do

@@ -5,6 +5,7 @@ class OriginalChaptersController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
+    Rails.logger.info(original_chapter_params)
     @original_chapter = OriginalChapter.new(original_chapter_params)
 
     if @original_chapter.save
@@ -16,6 +17,15 @@ class OriginalChaptersController < ApplicationController
     else
       render json: @original_chapter.errors, status: :unprocessable_entity
     end
+  end
+
+  def clean
+    @original_chapter = OriginalChapter.find(params[:id])
+    @book = @original_chapter.book
+    @corrupt_chapter = @original_chapter.as_corrupt_chapter
+    cache_chapter
+
+    redirect_to edit_book_corrupt_chapter_path(@book, @corrupt_chapter.id)
   end
 
   private

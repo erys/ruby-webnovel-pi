@@ -19,10 +19,7 @@ module CorruptChaptersHelper
     else
       og_chapter = OriginalChapter.where(book: @book, ch_number:).order(updated_at: :desc).first
       if og_chapter
-        @corrupt_chapter = og_chapter.as_corrupt_chapter
-        cache_chapter
-
-        edit_book_corrupt_chapter_path(@book, @corrupt_chapter.id)
+        clean_book_original_chapter_path(@book, og_chapter)
       else
 
         new_book_corrupt_chapter_path(@book)

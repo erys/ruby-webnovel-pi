@@ -25,10 +25,11 @@ module Api
       og_chap_params = params.require(:original_chapter).permit(
         :ch_number,
         :link,
-        :authors_note,
+        :footnote,
         :font_name,
-        :original_text,
+        :main_text,
         :subtitle,
+        :substitutions,
         :title
       )
       og_chap_params[:book] = Book.find_by(jjwxc_id: params[:novel_id])

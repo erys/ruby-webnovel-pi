@@ -32,7 +32,7 @@
       <div class="container-fluid">
         <div class="row justify-content-between mb-1">
           <div class="col-auto">
-            <%= render 'previous' %>
+            <%= render 'previous', locals: { form: } %>
           </div>
           <div class="col-auto">
             <%= form.button "Abort", formmethod: :delete, data: { turbo: false }, class: "btn btn-danger" %>

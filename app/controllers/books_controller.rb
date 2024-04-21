@@ -22,9 +22,11 @@ class BooksController < ApplicationController
 
   def index
     @books = Book.all.sort
+    @page_title = 'erys\'s danmei library'
   end
 
   def new
+    @page_title = 'Add a new novel'
     @book = Book.new
   end
 
@@ -135,6 +137,7 @@ class BooksController < ApplicationController
 
   def find_book
     @book = Book.find_by(short_name: params[:short_name])
+    @page_title = @book.tl_title
   end
 
   def sort_chapters

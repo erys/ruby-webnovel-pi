@@ -129,5 +129,6 @@ class CorruptChaptersController < ApplicationController
                          Rails.cache.read(id)
                        end
     @book = Book.find(@corrupt_chapter.book_id) if @corrupt_chapter
+    @page_title = "#{@book.short_name} - Cleaning ch #{@corrupt_chapter.ch_number}"
   end
 end

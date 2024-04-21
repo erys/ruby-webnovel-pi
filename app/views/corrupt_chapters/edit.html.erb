@@ -1,6 +1,19 @@
 <% content_for :nav do %>
   <%= render 'chapters/nav_top' %>
 <% end %>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "clean-chapter" %>
+<% end %>
+<% content_for :head do %>
+  <% if @corrupt_chapter.font_file %>
+    <style>
+      @font-face {
+          font-family: "Font from JJWXC";
+          src: url("<%= @corrupt_chapter.font_file %>");
+      }
+    </style>
+  <% end %>
+<% end %>
 <h1>Clean chapter <%= @corrupt_chapter.ch_number %></h1>
 <div class="row">
   <h2 class="mb-1">
@@ -9,9 +22,11 @@
   </h2>
 </div>
 <div class="row">
-  <div class="col-md-6 mb-1">
-    <%= simple_format(@excerpt, sanitize: false) %>
-  </div>
+  <% if @corrupt_chapter.font_file %>
+    <div class="corrupt-char"><%= @current_char.og_bytes %></div>
+  <% else %>
+    <%= render 'excerpt' %>
+  <% end %>
   <div class="col-md-6 mb-3">
     <div class="container-fluid">
       <%= nice_form_with model: [@book, @corrupt_chapter], url: book_corrupt_chapter_path do |form| %>
@@ -45,13 +60,8 @@
             <%= @corrupt_chapter.corrupt_chars.index %>/<%= @corrupt_chapter.corrupt_chars.length %>
           </div>
         </div>
-        <%# TODO: #24 use same font as jjwxc (see C# version) %>
         <div class="d-flex flex-wrap">
-          <% @corrupt_chapter.possible_replacements.each do |char| %>
-            <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn',
-                           'data-clipboard-action' => "copy",
-                           'data-clipboard-text' => @corrupt_chapter.next_bytes %>
-          <% end %>
+          <%= render 'characters' %>
         </div>
       <% end %>
     </div>

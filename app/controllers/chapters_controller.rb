@@ -96,6 +96,7 @@ class ChaptersController < ApplicationController
 
   def init_chapters
     @chapter = @book.chapters.find { |chapter| chapter.ch_number.to_s == params[:ch_number] }
+    @page_title = "#{@book.short_name} - Chapter #{@chapter.ch_number}"
     @previous = @chapter.previous
     @next = @chapter.next
   end

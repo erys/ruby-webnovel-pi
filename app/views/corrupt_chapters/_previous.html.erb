@@ -1,0 +1,22 @@
+<div class="hstack">
+                <span class="text-primary text-nowrap">Last replaced:
+                  <% if @corrupt_chapter.prev_char %>
+                    <% if @font_file %>
+                      <span class="corrupt-char"><%= @corrupt_chapter.prev_char.og_bytes %></span>
+                      =
+                    <% end %>
+                    <%= @corrupt_chapter.prev_char&.correct_char %>
+                    <% else %>
+                      <%= 'none' %>
+                    <%end %>
+                </span>
+  <% if @corrupt_chapter.can_undo? %>
+    <%= form.submit "Undo", {
+      formaction: undo_book_corrupt_chapter_path,
+      class: 'form-control btn btn-secondary clipboard-btn mx-2',
+      'data-clipboard-action' => "copy",
+      'data-clipboard-text' => @corrupt_chapter.prev_char&.og_bytes,
+    } %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <% end %>
+</div>

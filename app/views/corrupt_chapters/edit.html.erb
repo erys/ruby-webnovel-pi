@@ -15,45 +15,24 @@
   <% end %>
 <% end %>
 <h1>Clean chapter <%= @corrupt_chapter.ch_number %></h1>
-<div class="row">
-  <h2 class="mb-1">
-    Excerpt
-    <small class="text-muted"><%= @corrupt_chapter.percent %>% <%= @current_char.occurrences %> occurrences</small>
-  </h2>
-</div>
+<% unless @font_file %>
+  <div class="row">
+    <h2 class="mb-1">
+      Excerpt
+      <small class="text-muted"><%= @corrupt_chapter.percent %>% <%= @current_char.occurrences %> occurrences</small>
+    </h2>
+  </div>
+<% end %>
 <div class="row">
   <% unless @font_file %>
     <%= render 'excerpt' %>
   <% end %>
-  <div class="col-md-6 mb-3">
-    <div class="container-fluid">
-      <%= nice_form_with model: [@book, @corrupt_chapter], url: book_corrupt_chapter_path do |form| %>
+  <%= nice_form_with model: [@book, @corrupt_chapter], url: book_corrupt_chapter_path do |form| %>
+    <div class="col-12 mb-3">
+      <div class="container-fluid">
         <div class="row justify-content-between mb-1">
           <div class="col-auto">
-            <div class="hstack">
-                <span class="text-primary text-nowrap">Last replaced:
-                  <strong>
-                    <% if @corrupt_chapter.prev_char %>
-                      <% if @font_file %>
-                        <span class="corrupt-char"><%= @corrupt_chapter.prev_char.og_bytes %></span>
-                        =
-                      <% end %>
-                      <%= @corrupt_chapter.prev_char&.correct_char %>
-                    <% else %>
-                      <%= 'none' %>
-                    <%end %>
-                  </strong>
-                </span>
-              <% if @corrupt_chapter.can_undo? %>
-                <%= form.submit "Undo", {
-                  formaction: undo_book_corrupt_chapter_path,
-                  class: 'form-control btn btn-secondary clipboard-btn mx-2',
-                  'data-clipboard-action' => "copy",
-                  'data-clipboard-text' => @corrupt_chapter.prev_char&.og_bytes,
-                } %>
-                <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-              <% end %>
-            </div>
+            <%= render 'previous' %>
           </div>
           <div class="col-auto">
             <%= form.button "Abort", formmethod: :delete, data: { turbo: false }, class: "btn btn-danger" %>
@@ -62,22 +41,21 @@
           </div>
         </div>
 
-        <div class="progress mb-1">
-          <div class="progress-bar bg-info"  role="progressbar"
-               style="width: <%= number_to_percentage(@corrupt_chapter.progress_percent, precision: 0) %>"
-               aria-valuenow="<%= @corrupt_chapter.progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
-            <%= @corrupt_chapter.corrupt_chars.index %>/<%= @corrupt_chapter.corrupt_chars.length %>
-          </div>
-        </div>
-        <% if @font_file %>
-          <div class="row justify-content-center">
-            <div class="corrupt-char h2"><%= @current_char.og_bytes %></div>
-          </div>
-        <% end %>
-        <div class="d-flex flex-wrap">
-          <%= render 'characters' %>
+        <%= render 'progress' %>
+
+      </div>
+    </div>
+    <div class="col-md-6">
+      <% if @font_file %>
+        <div class="row my-md-5">
+          <div class="h2 text-center text-md-end"><%= @current_char.occurrences %> occurrences:<span class="corrupt-char"><%= @current_char.og_bytes %></span></div>
         </div>
       <% end %>
     </div>
-  </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-wrap">
+        <%= render 'characters' %>
+      </div>
+    </div>
+  <% end %>
 </div>

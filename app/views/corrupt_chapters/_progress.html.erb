@@ -1,0 +1,7 @@
+<div class="progress mb-1">
+  <div class="progress-bar bg-info"  role="progressbar"
+       style="width: <%= number_to_percentage(@corrupt_chapter.progress_percent, precision: 0) %>"
+       aria-valuenow="<%= @corrupt_chapter.progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
+    <%= @corrupt_chapter.corrupt_chars.index %>/<%= @corrupt_chapter.corrupt_chars.length %>
+  </div>
+</div>

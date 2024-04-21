@@ -7,10 +7,10 @@
 <% content_for :head do %>
   <% if @font_file %>
     <style>
-      @font-face {
-          font-family: "Font from JJWXC";
-          src: url("<%= @font_file %>");
-      }
+        @font-face {
+            font-family: "Font from JJWXC";
+            src: url("<%= @font_file %>");
+        }
     </style>
   <% end %>
 <% end %>
@@ -22,9 +22,7 @@
   </h2>
 </div>
 <div class="row">
-  <% if @font_file %>
-    <div class="corrupt-char"><%= @current_char.og_bytes %></div>
-  <% else %>
+  <% unless @font_file %>
     <%= render 'excerpt' %>
   <% end %>
   <div class="col-md-6 mb-3">
@@ -34,7 +32,18 @@
           <div class="col-auto">
             <div class="hstack">
                 <span class="text-primary text-nowrap">Last replaced:
-                  <strong><%= @corrupt_chapter.prev_char&.correct_char || 'none' %></strong></span>
+                  <strong>
+                    <% if @corrupt_chapter.prev_char %>
+                      <% if @font_file %>
+                        <span class="corrupt-char"><%= @corrupt_chapter.prev_char.og_bytes %></span>
+                        =
+                      <% end %>
+                      <%= @corrupt_chapter.prev_char&.correct_char %>
+                    <% else %>
+                      <%= 'none' %>
+                    <%end %>
+                  </strong>
+                </span>
               <% if @corrupt_chapter.can_undo? %>
                 <%= form.submit "Undo", {
                   formaction: undo_book_corrupt_chapter_path,
@@ -60,6 +69,11 @@
             <%= @corrupt_chapter.corrupt_chars.index %>/<%= @corrupt_chapter.corrupt_chars.length %>
           </div>
         </div>
+        <% if @font_file %>
+          <div class="row justify-content-center">
+            <div class="corrupt-char h2"><%= @current_char.og_bytes %></div>
+          </div>
+        <% end %>
         <div class="d-flex flex-wrap">
           <%= render 'characters' %>
         </div>

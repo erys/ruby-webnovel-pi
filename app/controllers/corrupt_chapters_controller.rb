@@ -130,5 +130,15 @@ class CorruptChaptersController < ApplicationController
                        end
     @book = Book.find(@corrupt_chapter.book_id) if @corrupt_chapter
     @page_title = "#{@book.short_name} - Cleaning ch #{@corrupt_chapter.ch_number}"
+    fetch_font_file
+  end
+
+  def fetch_font_file
+    return unless @corrupt_chapter.original_chapter_id
+
+    og_chapter = OriginalChapter.find(@corrupt_chapter.original_chapter_id)
+    return unless og_chapter&.font_file&.attached?
+
+    @font_file = url_for(og_chapter.font_file)
   end
 end

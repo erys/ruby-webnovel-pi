@@ -5,11 +5,11 @@
   <%= stylesheet_link_tag "clean-chapter" %>
 <% end %>
 <% content_for :head do %>
-  <% if @corrupt_chapter.font_file %>
+  <% if @font_file %>
     <style>
       @font-face {
           font-family: "Font from JJWXC";
-          src: url("<%= @corrupt_chapter.font_file %>");
+          src: url("<%= @font_file %>");
       }
     </style>
   <% end %>
@@ -22,7 +22,7 @@
   </h2>
 </div>
 <div class="row">
-  <% if @corrupt_chapter.font_file %>
+  <% if @font_file %>
     <div class="corrupt-char"><%= @current_char.og_bytes %></div>
   <% else %>
     <%= render 'excerpt' %>

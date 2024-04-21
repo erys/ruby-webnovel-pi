@@ -24,8 +24,6 @@ class CorruptChapter
   attr_accessor :id
   # @return [String]
   attr_accessor :subtitle
-  # @return [String]
-  attr_accessor :font_file
 
   attr_internal
 
@@ -59,17 +57,7 @@ class CorruptChapter
     parse_main_text(corrupt_hash)
     @corrupt_chars = CorruptCharacterList.new(all_characters: corrupt_hash.values.sort.reverse!)
     @possible_replacements = @possible_chars.select { |_, value| (value[1]).zero? }.keys
-    @font_file = fetch_font_file
     @parsed = true
-  end
-
-  def fetch_font_file
-    return nil unless original_chapter_id
-
-    original_chapter = OriginalChapter.find(original_chapter_id)
-    return nil unless original_chapter.font_file.attached?
-
-    url_for(original_chapter.font_file)
   end
 
   def replace(new_char)

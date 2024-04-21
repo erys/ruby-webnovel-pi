@@ -45,16 +45,18 @@
 
       </div>
     </div>
-    <div class="col-md-6">
-      <% if @font_file %>
-        <div class="row my-md-5">
-          <div class="h2 text-center text-md-end"><%= @current_char.occurrences %> occurrences:<span class="corrupt-char"><%= @current_char.og_bytes %></span></div>
+    <div class="row">
+      <div class="col-md-6">
+        <% if @font_file %>
+          <div class="row my-md-5">
+            <div class="h2 text-center text-md-end"><%= @current_char.occurrences %> occurrences:<span class="corrupt-char"><%= @current_char.og_bytes %></span></div>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex flex-wrap">
+          <%= render 'characters' %>
         </div>
-      <% end %>
-    </div>
-    <div class="col-md-6">
-      <div class="d-flex flex-wrap">
-        <%= render 'characters' %>
       </div>
     </div>
   <% end %>

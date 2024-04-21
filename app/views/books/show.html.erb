@@ -27,11 +27,7 @@
         <% corrupt_id = corrupt_chapter_id(@book.new_chapter_number) %>
         <% maybe_chapter = Rails.cache.read(corrupt_id) if corrupt_id %>
         <% if @book.latest_chapter.present? %>
-          <% if maybe_chapter %>
-            <%= link_to "Resume cleaning chapter", edit_book_corrupt_chapter_path(@book, corrupt_id), class: "list-group-item list-group-item-action list-group-item-info" %>
-          <% else %>
-            <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
-          <% end %>
+          <%= link_to "Clean chapter", clean_chapter_url, class: "list-group-item list-group-item-action list-group-item-info" %>
           <div class="list-group-item disabled">Latest Chapter:</div>
           <% chapter = @book.latest_chapter %>
           <% classes = "list-group-item list-group-item-action list-group-item-primary" %>
@@ -42,10 +38,7 @@
           <% classes = "list-group-item list-group-item-action" %>
           <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
         <% end %>
-        <%= link_to "Clean chapter", new_book_corrupt_chapter_path(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
-        <% if maybe_chapter %>
-          <%= link_to "Resume cleaning chapter", edit_book_corrupt_chapter_path(@book, corrupt_id), class: "list-group-item list-group-item-action list-group-item-info" %>
-        <% end %>
+        <%= link_to "Clean chapter", clean_chapter_url, class: "list-group-item list-group-item-action list-group-item-info" %>
       </div>
     </div>
   </div>

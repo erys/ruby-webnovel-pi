@@ -32,6 +32,8 @@
             </div>
           </div>
           <div class="col-auto">
+            <%= form.button "Abort", formmethod: :delete, data: { turbo: false }, class: "btn btn-danger" %>
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token(form_options: { method: :delete }) %>
             <%= copy_text_button(@current_char.og_bytes, label_text: 'Copy bytes', classes: %w[btn-info]) %>
           </div>
         </div>

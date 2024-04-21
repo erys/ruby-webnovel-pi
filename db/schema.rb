@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_26_024339) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_19_172123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -107,6 +107,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_024339) do
     t.string "font_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title"
+    t.text "main_text"
+    t.text "footnote"
+    t.string "subtitle"
+    t.string "substitutions", default: [], array: true
     t.index ["book_id"], name: "index_original_chapters_on_book_id"
   end
 

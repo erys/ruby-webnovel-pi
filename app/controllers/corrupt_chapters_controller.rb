@@ -13,6 +13,13 @@ class CorruptChaptersController < ApplicationController
     redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
   end
 
+  def destroy
+    Rails.cache.delete(params[:id])
+    @book = Book.find_by(short_name: params[:book_short_name])
+
+    redirect_to book_path(@book), status: :see_other
+  end
+
   def create_api
     @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
     @corrupt_chapter = init_corrupt_chapter

@@ -6,9 +6,6 @@
 Rails.application.routes.draw do
   post 'backup/generate', to: 'backup#generate'
 
-  namespace :api do
-    resources :original_chapters, only: %i[create]
-  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
@@ -22,8 +19,11 @@ Rails.application.routes.draw do
     resources :chapters, param: :ch_number do
       get :clean, on: :collection
     end
-    resources :corrupt_chapters, only: %i[new create update edit] do
+    resources :corrupt_chapters, only: %i[new create update edit destroy] do
       patch :undo, on: :member
+    end
+    resources :original_chapters, only: [], param: :ch_number do
+      get :clean, on: :member
     end
   end
 
@@ -34,7 +34,11 @@ Rails.application.routes.draw do
     end
 
     resources :chapters, only: [] do
-      patch ':jjwxc_id:/:ch_number/set_subtitle', to: 'chapters#set_subtitle', on: :collection
+      patch ':jjwxc_id/:ch_number/set_subtitle', to: 'chapters#set_subtitle', on: :collection
+    end
+
+    resources :original_chapters, only: [] do
+      post ':jjwxc_id/:ch_number/', to: 'original_chapters#create', on: :collection
     end
   end
 

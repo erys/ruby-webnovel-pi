@@ -19,7 +19,7 @@
           data-bs-toggle="tooltip" data-bs-placement="left" title="Add chapter from JJWXC"></i>
         <% end %>
         <% link_classes = %w[col-auto mh-100 py-0 justify-content-center] %>
-        <% link_classes.push("invisible") unless book.latest_chapter_number > book.latest_translated_chapter %>
+        <% link_classes.push("invisible") unless book.latest_chapter_number > book.latest_tl_ch_number %>
 
         <%= link_to edit_book_chapter_path(book, book.latest_tl_ch_number + 1),
                     class: link_classes, style: "height:100%" do %>

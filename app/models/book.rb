@@ -126,7 +126,7 @@ class Book < ApplicationRecord
   def translation_progress_percent
     return 0 unless source_chapter_count&.positive? && latest_translated_chapter.present?
 
-    (latest_translated_chapter.ch_number * 100.0) / source_chapter_count
+    (latest_tl_ch_number * 100.0) / source_chapter_count
   end
 
   def cleaning_progress_percent
@@ -167,7 +167,7 @@ class Book < ApplicationRecord
   def latest_translated_chapter
     @latest_translated_chapter ||= chapters_sorted&.reverse&.find do |chapter|
       chapter.status == Chapter::TRANSLATED
-    end&.ch_number || 0
+    end
   end
 
   def latest_tl_ch_number

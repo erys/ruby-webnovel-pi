@@ -35,3 +35,6 @@ Style/Documentation:
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
+
+Metrics/ClassLength:
+  Max: 150

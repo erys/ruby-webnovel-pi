@@ -124,13 +124,32 @@ class Book < ApplicationRecord
   end
 
   def translation_progress_percent
+    return 0 unless source_chapter_count&.positive? && latest_translated_chapter.present?
+
+    (latest_translated_chapter.ch_number * 100.0) / source_chapter_count
+  end
+
+  def cleaning_progress_percent
     return 0 unless source_chapter_count&.positive? && latest_chapter.present?
 
     (latest_chapter.ch_number * 100.0) / source_chapter_count
   end
 
+  def clean_only_percent
+    cleaning_progress_percent - translation_progress_percent
+  end
+
+  def source_chapter_count_display
+    "#{source_chapter_count}#{'+' if original_status == IN_PROGRESS}"
+  end
+
   def translation_progress
-    "#{latest_chapter&.ch_number || 0}/#{source_chapter_count}#{'+' if original_status == IN_PROGRESS}"
+    if latest_tl_ch_number != latest_chapter_number
+      "#{latest_tl_ch_number || 0} (#{latest_chapter_number})/#{source_chapter_count_display}"
+
+    else
+      "#{latest_tl_ch_number || 0}/#{source_chapter_count_display}"
+    end
   end
 
   def jjwxc_url
@@ -146,9 +165,13 @@ class Book < ApplicationRecord
   end
 
   def latest_translated_chapter
-    chapters_sorted&.reverse&.find do |chapter|
+    @latest_translated_chapter ||= chapters_sorted&.reverse&.find do |chapter|
       chapter.status == Chapter::TRANSLATED
     end&.ch_number || 0
+  end
+
+  def latest_tl_ch_number
+    latest_translated_chapter&.ch_number || 0
   end
 
   def new_chapter_number

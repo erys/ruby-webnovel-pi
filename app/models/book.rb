@@ -193,7 +193,9 @@ class Book < ApplicationRecord
   def add_to_zip(zip, dir: nil)
     zip.write_deflated_file(File.nice_join(dir, 'metadata.json')) { |sink| dump_metadata(sink) }
     # empty file for typing
-    zip.write_stored_file(File.nice_join(dir, 'BOOK')) { |_| }
+    zip.write_stored_file(File.nice_join(dir, 'BOOK')) do |_|
+      # empty file
+    end
 
     chapters.each { |chapter| chapter.add_to_archive(zip, dir:) }
   end
@@ -205,7 +207,7 @@ class Book < ApplicationRecord
   private
 
   def create_occurrences
-    Character.all.each do |character|
+    Character.find_each do |character|
       CharacterOccurrence.create(book: self, character:, occurrences: 0)
     end
   end

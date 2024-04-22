@@ -26,6 +26,8 @@
 #  fk_rails_...  (book_id => books.id)
 
 require 'open-uri'
+
+# representation of chapter from jjwxc that has not yet been cleaned
 class OriginalChapter < ApplicationRecord
   belongs_to :book
   has_one_attached :html

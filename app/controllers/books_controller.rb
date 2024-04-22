@@ -125,7 +125,8 @@ class BooksController < ApplicationController
     update_chapter_text_from_zip(chapter, dir_name, zip)
 
     # fix updated_at to match archive since active storage upload touches it
-    chapter.touch(time: ch_metadata[:updated_at])
+    #
+    chapter.touch(time: ch_metadata[:updated_at]) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def update_chapter_text_from_zip(chapter, dir_name, zip)
@@ -156,7 +157,7 @@ class BooksController < ApplicationController
 
   def generate_short_name(tl_title, short_name)
     if short_name.blank? && tl_title.present?
-      tl_title.squish.split.map { |word| word[0] }.join.upcase
+      tl_title.squish.split.pluck(0).join.upcase
     else
       short_name&.squish&.gsub(' ', '-')&.upcase
     end

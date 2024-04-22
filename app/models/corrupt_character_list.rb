@@ -38,7 +38,7 @@ class CorruptCharacterList
 
   def undo
     previous = prev_char
-    return unless previous.present?
+    return if previous.blank?
 
     prev_replacement = previous.reset_char
     @index -= 1

@@ -44,7 +44,7 @@ class OriginalChaptersController < ApplicationController
       :main_text,
       :subtitle,
       :title,
-      substitutions: []
+      substitutions: [],
     )
     og_chap_params[:book] = Book.find_by(jjwxc_id: params[:jjwxc_id])
     og_chap_params

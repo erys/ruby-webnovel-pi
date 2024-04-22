@@ -144,11 +144,11 @@ class Book < ApplicationRecord
   end
 
   def translation_progress
-    if latest_tl_ch_number != latest_chapter_number
+    if latest_tl_ch_number == latest_chapter_number
+      "#{latest_tl_ch_number || 0}/#{source_chapter_count_display}"
+    else
       "#{latest_tl_ch_number || 0} (#{latest_chapter_number})/#{source_chapter_count_display}"
 
-    else
-      "#{latest_tl_ch_number || 0}/#{source_chapter_count_display}"
     end
   end
 

@@ -29,7 +29,7 @@ class CorruptCharacter
   end
 
   def attributes
-    CHAR_ATTR.map { |symbol| [symbol.to_s, nil] }.to_h
+    CHAR_ATTR.to_h { |symbol| [symbol.to_s, nil] }
   end
 
   def known?

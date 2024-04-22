@@ -51,7 +51,7 @@ class OriginalChapter < ApplicationRecord
     html.attach(
       io: StringIO.new(@html_data),
       filename: 'chapter.html',
-      content_type: 'text/html'
+      content_type: 'text/html',
     )
   end
 

@@ -124,7 +124,7 @@ class CorruptChapter
   def init_occurrences
     book = Book.includes(character_occurrences: :character).find(book_id)
     book_occurrences = book.character_occurrences.sort.reverse!
-    @possible_chars = book_occurrences.map { |occurrence| [occurrence.character.character, [occurrence.id, 0]] }.to_h
+    @possible_chars = book_occurrences.to_h { |occurrence| [occurrence.character.character, [occurrence.id, 0]] }
   end
 
   def finalize_text

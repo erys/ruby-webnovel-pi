@@ -26,3 +26,12 @@ Layout/EndOfLine:
 
 Rails/I18nLocaleTexts:
   Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - 'app/helpers/**/*'
+    - 'test/**/*'
+    - 'app/models/application_record.rb'
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma

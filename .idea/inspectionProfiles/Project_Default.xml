@@ -21,6 +21,7 @@
           <entry key="warning" value="WARNING" />
         </map>
       </option>
+      <option name="myRunRubocopOnSave" value="true" />
     </inspection_tool>
   </profile>
 </component>

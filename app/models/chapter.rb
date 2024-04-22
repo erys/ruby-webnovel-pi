@@ -63,7 +63,7 @@ class Chapter < ApplicationRecord
     og_text.attach(
       io: StringIO.new(@og_text_data),
       filename: 'og_data.txt',
-      content_type: 'text/plain'
+      content_type: 'text/plain',
     )
   end
 
@@ -83,7 +83,7 @@ class Chapter < ApplicationRecord
     tl_text.attach(
       io: StringIO.new(@tl_text_data),
       filename: 'tl_data.txt',
-      content_type: 'text/plain'
+      content_type: 'text/plain',
     )
   end
 

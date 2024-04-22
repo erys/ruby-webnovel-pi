@@ -58,7 +58,7 @@ class BooksController < ApplicationController
 
   def backup
     response.headers['Content-Disposition'] =
-      "attachment; filename=#{@book.short_name}-#{Time.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
+      "attachment; filename=#{@book.short_name}-#{Time.zone.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
     zip_tricks_stream do |zip|
       @book.add_to_zip(zip)
     end
@@ -156,7 +156,7 @@ class BooksController < ApplicationController
 
   def generate_short_name(tl_title, short_name)
     if short_name.blank? && tl_title.present?
-      tl_title.squish.split(' ').map { |word| word[0] }.join.upcase
+      tl_title.squish.split.map { |word| word[0] }.join.upcase
     else
       short_name&.squish&.gsub(' ', '-')&.upcase
     end

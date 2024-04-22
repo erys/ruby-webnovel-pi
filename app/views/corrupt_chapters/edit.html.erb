@@ -51,8 +51,9 @@
           <% if @font_file %>
             <div class="row my-1">
               <div class="h2 text-center">
-                <%= @current_char.occurrences %> occurrences:
-                <span class="corrupt-char ps-2"><%= @current_char.og_bytes %></span>
+
+                <span class="corrupt-char"><%= @current_char.og_bytes %></span>
+                <span class="px-1">&mdash;</span><%= @current_char.occurrences %> occurrences:
               </div>
             </div>
           <% end %>

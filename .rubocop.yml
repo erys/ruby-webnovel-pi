@@ -1,4 +1,6 @@
-require: rubocop-rails
+require:
+  - ./lib/rubocop_autocorrect.rb
+  - rubocop-rails
 inherit_from: .rubocop_todo.yml
 
 AllCops:

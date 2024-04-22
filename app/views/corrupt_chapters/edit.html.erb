@@ -45,11 +45,11 @@
 
       </div>
     </div>
-    <div class="row">
+    <div class="row flex-grow-1 align-content-md-center">
       <div class="col-md-6">
         <% if @font_file %>
           <div class="row my-md-5">
-            <div class="h2 text-center text-md-end"><%= @current_char.occurrences %> occurrences:<span class="corrupt-char"><%= @current_char.og_bytes %></span></div>
+            <div class="h2 text-center text-md-end"><%= @current_char.occurrences %> occurrences:<span class="corrupt-char ps-2"><%= @current_char.og_bytes %></span></div>
           </div>
         <% end %>
       </div>

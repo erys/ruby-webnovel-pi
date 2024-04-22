@@ -4,27 +4,10 @@
 class CorruptChaptersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create_api
   before_action :fetch_chapter, only: %i[edit undo update]
-  def create
-    # TODO: #12 add check on ch_number
-    # TODO: #13 add ability to overwrite existing chapter
+  def new
     @book = Book.find_by(short_name: params[:book_short_name])
-    @corrupt_chapter = init_corrupt_chapter
-    helpers.cache_chapter
-    redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
-  end
-
-  def destroy
-    Rails.cache.delete(params[:id])
-    @book = Book.find_by(short_name: params[:book_short_name])
-
-    redirect_to book_path(@book), status: :see_other
-  end
-
-  def create_api
-    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
-    @corrupt_chapter = init_corrupt_chapter
-    helpers.cache_chapter
-    render json: { id: @corrupt_chapter.id }
+    @corrupt_chapter = CorruptChapter.new({ book_id: @book.id }, parts_params: {})
+    @corrupt_chapter.ch_number = @book.new_chapter_number
   end
 
   def edit
@@ -35,6 +18,15 @@ class CorruptChaptersController < ApplicationController
     else
       gen_excerpt
     end
+  end
+
+  def create
+    # TODO: #12 add check on ch_number
+    # TODO: #13 add ability to overwrite existing chapter
+    @book = Book.find_by(short_name: params[:book_short_name])
+    @corrupt_chapter = init_corrupt_chapter
+    helpers.cache_chapter
+    redirect_to(edit_book_corrupt_chapter_path(@book, @corrupt_chapter))
   end
 
   def update
@@ -51,6 +43,20 @@ class CorruptChaptersController < ApplicationController
     redirect_to(edit_book_corrupt_chapter_path)
   end
 
+  def destroy
+    Rails.cache.delete(params[:id])
+    @book = Book.find_by(short_name: params[:book_short_name])
+
+    redirect_to book_path(@book), status: :see_other
+  end
+
+  def create_api
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+    @corrupt_chapter = init_corrupt_chapter
+    helpers.cache_chapter
+    render json: { id: @corrupt_chapter.id }
+  end
+
   def undo
     old_replacement = @corrupt_chapter.undo
     if old_replacement
@@ -60,12 +66,6 @@ class CorruptChaptersController < ApplicationController
     end
     helpers.cache_chapter
     redirect_to edit_book_corrupt_chapter_path
-  end
-
-  def new
-    @book = Book.find_by(short_name: params[:book_short_name])
-    @corrupt_chapter = CorruptChapter.new({ book_id: @book.id }, parts_params: {})
-    @corrupt_chapter.ch_number = @book.new_chapter_number
   end
 
   def cur_bytes

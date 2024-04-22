@@ -25,12 +25,14 @@ class BooksController < ApplicationController
     @page_title = 'erys\'s danmei library'
   end
 
+  def show; end
+
   def new
     @page_title = 'Add a new novel'
     @book = Book.new
   end
 
-  def show; end
+  def edit; end
 
   def create
     populate_author
@@ -42,8 +44,6 @@ class BooksController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
-  def edit; end
 
   def update
     populate_author

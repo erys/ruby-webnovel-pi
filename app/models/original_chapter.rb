@@ -56,7 +56,8 @@ class OriginalChapter < ApplicationRecord
   end
 
   def as_corrupt_chapter
-    CorruptChapter.new({ ch_number:, subtitle:, book_id:, original_chapter_id: id }, parts_params: { title:, main_text:, footnote:, substitutions: })
+    CorruptChapter.new({ ch_number:, subtitle:, book_id:, original_chapter_id: id },
+                       parts_params: { title:, main_text:, footnote:, substitutions: })
   end
 
   def html_data

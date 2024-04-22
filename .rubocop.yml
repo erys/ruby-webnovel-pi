@@ -1,6 +1,8 @@
+require: rubocop-rails
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  NewCops: enable
   Exclude:
     - 'db/migrate/*'
     - 'db/schema.rb'
@@ -17,5 +19,8 @@ AllCops:
     - '.git/**/*'
     - 'config.ru'
     - 'rakefile'
-Style/EndOfLine:
+Layout/EndOfLine:
   EnforcedStyle: lf
+
+Rails/I18nLocaleTexts:
+  Enabled: false

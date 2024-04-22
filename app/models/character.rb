@@ -12,5 +12,5 @@
 #  updated_at         :datetime         not null
 #
 class Character < ApplicationRecord
-  has_many :character_occurrences
+  has_many :character_occurrences, dependent: :destroy
 end

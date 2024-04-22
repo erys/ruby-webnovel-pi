@@ -160,6 +160,10 @@ class Book < ApplicationRecord
     @latest_chapter ||= chapters.max { |a, b| a.ch_number <=> b.ch_number }
   end
 
+  def next_clean_link
+    "https://my.jjwxc.net/onebook_vip.php?novelid=#{jjwxc_id}&chapterid=#{latest_chapter_number + 1}"
+  end
+
   def latest_chapter_number
     latest_chapter&.ch_number || 0
   end

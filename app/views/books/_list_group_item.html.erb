@@ -14,7 +14,11 @@
     <% end %>
     <% if local_assigns[:include_buttons] %>
       <div class="col-auto mh-100 m-n2 py-0 justify-content-between">
-        <%= link_to new_book_corrupt_chapter_path(book), class: %w[col-auto mh-100 p-0 justify-content-center text-decoration-none], style: "height:100%" do %>
+        <%= link_to book.next_clean_link,
+                    class: %w[col-auto mh-100 p-0 justify-content-center text-decoration-none],
+                    style: "height:100%",
+                    target: "_blank",
+                    rel: "noreferrer" do %>
           <i class="bi bi-plus-square-fill text-<%= book.status_class %> text-decoration-none py-0" style="font-size: 40px; line-height: 40px"
           data-bs-toggle="tooltip" data-bs-placement="left" title="Add chapter from JJWXC"></i>
         <% end %>

@@ -9,9 +9,9 @@ class OriginalChaptersController < ApplicationController
 
     if @original_chapter.save
       @original_chapter.download_font
-      render json: { book: @original_chapter.book.tl_title,
+      render json: { book: @original_chapter.book.short_name,
                      ch_number: @original_chapter.ch_number,
-                     font: @original_chapter.font_file.attached? ? url_for(@original_chapter.font_file) : nil },
+                     original_chapter_id: @original_chapter.id },
              status: :created
     else
       render json: @original_chapter.errors, status: :unprocessable_entity

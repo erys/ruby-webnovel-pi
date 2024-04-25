@@ -5,7 +5,9 @@
                       <span class="corrupt-char"><%= @corrupt_chapter.prev_char.og_bytes %></span>
                       =
                     <% end %>
+                    <span class="replacement-char">
                     <%= @corrupt_chapter.prev_char&.correct_char %>
+                    </span>
                     <% else %>
                       <%= 'none' %>
                     <%end %>

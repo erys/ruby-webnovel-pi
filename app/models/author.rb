@@ -11,6 +11,11 @@
 #  updated_at :datetime         not null
 #  jjwxc_id   :integer
 #
+# Indexes
+#
+#  index_authors_on_jjwxc_id  (jjwxc_id) UNIQUE
+#  index_authors_on_og_name   (og_name) UNIQUE
+#
 class Author < ApplicationRecord
   has_many :books, dependent: :restrict_with_exception
 

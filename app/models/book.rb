@@ -206,7 +206,7 @@ class Book < ApplicationRecord
   end
 
   def to_partial_path
-    'book/_list_group_item'
+    'book/list_group_item'
   end
 
   private

@@ -45,6 +45,16 @@ class BooksController < ApplicationController
     end
   end
 
+  def create_api
+    @author = maybe_create_author(**author_params)
+    @book = Book.new(book_params)
+    if @book.save
+      render json: { book: @book.id }
+    else
+      render json: { errors: @book.errors }, status: :unprocessable_entity
+    end
+  end
+
   def update
     populate_author
     @book.update!(book_params)
@@ -145,21 +155,29 @@ class BooksController < ApplicationController
     @chapters = @book.chapters_sorted
   end
 
+  def author_params
+    params.require(:author).permit(:og_name, :jjwxc_id)
+  end
+
   def book_params
     inner_params = params.require(:book).permit(:tl_title, :og_title, :description, :short_name,
                                                 :jjwxc_id, :original_status, :translation_status,
                                                 :last_chapter, :og_description)
     inner_params[:tl_title] = inner_params[:tl_title]&.squish
     inner_params[:author_id] = @author.id
-    inner_params[:short_name] = generate_short_name(inner_params[:tl_title], inner_params[:short_name])
+    inner_params[:short_name] = generate_short_name(
+      inner_params[:tl_title],
+      inner_params[:short_name],
+      inner_params[:jjwxc_id],
+    )
     inner_params
   end
 
-  def generate_short_name(tl_title, short_name)
+  def generate_short_name(tl_title, short_name, jjwxc_id)
     if short_name.blank? && tl_title.present?
       tl_title.squish.split.pluck(0).join.upcase
     else
-      short_name&.squish&.gsub(' ', '-')&.upcase
+      short_name&.squish&.gsub(' ', '-')&.upcase.presence || jjwxc_id
     end
   end
 end

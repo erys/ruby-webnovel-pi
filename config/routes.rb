@@ -41,6 +41,10 @@ Rails.application.routes.draw do
     resources :original_chapters, only: [] do
       post ':jjwxc_id/:ch_number/', to: 'original_chapters#create', on: :collection
     end
+
+    resources :books, only: [] do
+      post 'create', to: 'books#create_api', on: :collection
+    end
   end
 
   # TODO: #2 author pages

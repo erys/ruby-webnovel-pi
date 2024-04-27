@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_19_172123) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_27_211944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_19_172123) do
     t.string "tl_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "jjwxc_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -66,6 +67,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_19_172123) do
     t.string "translation_status", default: "In Progress"
     t.string "original_status", default: "Completed"
     t.integer "last_chapter"
+    t.text "og_description"
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["short_name"], name: "index_books_on_short_name", unique: true
   end

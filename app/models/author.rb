@@ -9,6 +9,7 @@
 #  tl_name    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  jjwxc_id   :integer
 #
 class Author < ApplicationRecord
   has_many :books, dependent: :destroy

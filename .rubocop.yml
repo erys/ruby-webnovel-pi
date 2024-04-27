@@ -32,6 +32,7 @@ Style/Documentation:
     - 'app/helpers/**/*'
     - 'test/**/*'
     - 'app/models/application_record.rb'
+    - 'db/migrate/*'
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma

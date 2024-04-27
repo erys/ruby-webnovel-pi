@@ -7,6 +7,7 @@
 #  id                 :bigint           not null, primary key
 #  description        :text
 #  last_chapter       :integer
+#  og_description     :text
 #  og_source          :string
 #  og_source_link     :string
 #  og_title           :string           not null

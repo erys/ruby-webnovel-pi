@@ -34,6 +34,10 @@ Style/Documentation:
     - 'app/models/application_record.rb'
     - 'db/migrate/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'config/**/*.rb'
+
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 

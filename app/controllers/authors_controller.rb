@@ -7,6 +7,7 @@ class AuthorsController < ApplicationController
   # GET /authors or /authors.json
   def index
     @authors = Author.all
+    @page_title = 'Authors'
   end
 
   # GET /authors/1 or /authors/1.json
@@ -15,6 +16,7 @@ class AuthorsController < ApplicationController
   # GET /authors/new
   def new
     @author = Author.new
+    @page_title = 'Add author'
   end
 
   # GET /authors/1/edit
@@ -63,10 +65,11 @@ class AuthorsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_author
     @author = Author.find(params[:id])
+    @page_title = @author.og_name
   end
 
   # Only allow a list of trusted parameters through.
   def author_params
-    params.fetch(:author, {})
+    params.require(:author).permit(:og_name, :tl_name, :jjwxc_id)
   end
 end

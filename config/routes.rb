@@ -4,7 +4,6 @@
 #
 
 Rails.application.routes.draw do
-  resources :authors
   post 'backup/generate', to: 'backup#generate'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -14,6 +13,7 @@ Rails.application.routes.draw do
 
   root 'books#index'
 
+  resources :authors
   resources :books, param: :short_name do
     post :backup, on: :member
     post :restore, on: :collection

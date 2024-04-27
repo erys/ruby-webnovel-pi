@@ -12,7 +12,7 @@
 #  jjwxc_id   :integer
 #
 class Author < ApplicationRecord
-  has_many :books, dependent: :destroy
+  has_many :books, dependent: :restrict_with_exception
 
   def display_name
     tl_name.presence || og_name

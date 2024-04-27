@@ -9,7 +9,7 @@
     <% else %>
       <%= @book.og_title %>
     <% end %></h2>
-  <h2 class="text-muted text-center"><small>By: <%= @book.author.og_name %></small></h2>
+  <h2 class="text-muted text-center"><small>By: <%= link_to @book.author.full_display, author_path(@book.author) %></small></h2>
 </div>
 <p class="text-center pt-2"><%= @book.translation_progress %> Chapters Translated, <%= @book.overall_status %></p>
 <div class="progress mt-n3 mb-2">

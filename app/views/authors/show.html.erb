@@ -13,9 +13,7 @@
 </div>
 
 <div class="list-group">
-  <% @author.books.each do |book| %>
-    <%= render partial: 'books/list_group_item', locals: { book:, include_buttons: false } %>
-  <% end %>
+  <%= render partial: @author.books, include_buttons: false %>
 </div>
 
 

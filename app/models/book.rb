@@ -205,6 +205,10 @@ class Book < ApplicationRecord
     JSON.dump(as_json(except: %i[id author_id], include: [:author, { chapters: { except: %i[id book_id] } }]), file_io)
   end
 
+  def to_partial_path
+    'book/_list_group_item'
+  end
+
   private
 
   def create_occurrences

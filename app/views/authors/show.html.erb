@@ -1,10 +1,26 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :nav do %>
+  <%= render :nav %>
+<% end %>
 
-<%= render @author %>
+<div class="row mb-2">
+  <h1 class="text-center">
+    <% if @author.jjwxc_id %>
+      <%= link_to @author.full_display, @author.jjwxc_link, target: "_blank" %>
+    <% else %>
+      <%= @author.full_display %>
+    <% end %>
+  </h1>
+</div>
 
-<div>
-  <%= link_to "Edit this author", edit_author_path(@author) %> |
-  <%= link_to "Back to authors", authors_path %>
+<div class="list-group">
+  <% @author.books.each do |book| %>
+    <%= render partial: 'list_group_item', locals: { book:, include_buttons: false } %>
+  <% end %>
+</div>
 
-  <%= button_to "Destroy this author", @author, method: :delete %>
+
+<div class="row">
+  <div class="col-auto">
+    <%= link_to "Edit", edit_author_path, class: %w[btn btn-primary] %>
+  </div>
 </div>

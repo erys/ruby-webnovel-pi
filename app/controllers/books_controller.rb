@@ -79,11 +79,11 @@ class BooksController < ApplicationController
   private
 
   def populate_author
-    @author = maybe_create_author(params[:book][:author_cn_name])
+    @author = maybe_create_author(og_name: params[:book][:author_cn_name])
   end
 
-  def maybe_create_author(og_name)
-    Author.find_by(og_name:) || Author.create(og_name:)
+  def maybe_create_author(og_name:, **author_params)
+    Author.create_with(**author_params).find_or_create_by(og_name:)
   end
 
   def restore_book(zip, dir_name = nil)
@@ -92,7 +92,7 @@ class BooksController < ApplicationController
     book = find_dup_book(metadata_json)
 
     book_params = metadata_json.slice(*Book.column_names)
-    book_params[:author] = maybe_create_author(metadata_json[:author][:og_name])
+    book_params[:author] = maybe_create_author(**metadata_json[:author].symbolize_keys)
     if book && book.updated_at.iso8601 < metadata_json[:updated_at]
       book.update!(book_params)
     elsif book.nil?

@@ -1,13 +1,8 @@
-<p style="color: green"><%= notice %></p>
-
 <h1>Authors</h1>
 
-<div id="authors">
+<div id="authors" class="list-group">
   <% @authors.each do |author| %>
     <%= render author %>
-    <p>
-      <%= link_to "Show this author", author %>
-    </p>
   <% end %>
 </div>
 

@@ -26,6 +26,8 @@
 #  fk_rails_...  (book_id => books.id)
 
 require 'open-uri'
+
+# representation of chapter from jjwxc that has not yet been cleaned
 class OriginalChapter < ApplicationRecord
   belongs_to :book
   has_one_attached :html
@@ -51,12 +53,13 @@ class OriginalChapter < ApplicationRecord
     html.attach(
       io: StringIO.new(@html_data),
       filename: 'chapter.html',
-      content_type: 'text/html'
+      content_type: 'text/html',
     )
   end
 
   def as_corrupt_chapter
-    CorruptChapter.new({ ch_number:, subtitle:, book_id: }, parts_params: { title:, main_text:, footnote:, substitutions: })
+    CorruptChapter.new({ ch_number:, subtitle:, book_id:, original_chapter_id: id },
+                       parts_params: { title:, main_text:, footnote:, substitutions: })
   end
 
   def html_data

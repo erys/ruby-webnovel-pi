@@ -2,3 +2,9 @@
      style="width: <%= number_to_percentage(book.translation_progress_percent, precision: 0) %>"
      aria-valuenow="<%= book.translation_progress_percent.round %>" aria-valuemin="0" aria-valuemax="100">
 </div>
+<% if book.latest_chapter_number > (book.latest_tl_ch_number || 0) %>
+  <div class="progress-bar bg-secondary" role=progressbar
+       style="width: <%= number_to_percentage(book.clean_only_percent, precision: 0) %>"
+       aria-valuenow="<%= book.clean_only_percent.round %>" aria-valuemin="0" aria-valuemax="100">
+  </div>
+<% end %>

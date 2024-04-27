@@ -5,55 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Clean Blog - Start Bootstrap Theme</title>
+  <title><%= @page_title %></title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= yield :stylesheets %>
   <%= javascript_importmap_tags %>
+  <%= yield :head %>
 </head>
-<body style="padding-top: 60px;">
-<!-- Navigation-->
+<body style="height: 100vh; margin: 0">
+<div class="d-flex flex-column h-100" style="padding-top: 70px; overflow-y: scroll">
+  <!-- Navigation-->
 <%# TODO: #25 breadcrumbs in navbar, short name on narrow screens %>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-  <div class="container-fluid">
-    <%= link_to "Library", root_path, class: 'navbar-brand' %>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor01">
-      <ul class="navbar-nav me-auto">
-        <%= yield :nav %>
-      </ul>
-    </div>
-  </div>
-</nav>
-<!-- Main Content-->
-<div class="container-md pb-2">
-  <% if flash[:undo_success] %>
-    <div class="alert alert-success alert-dismissible col-auto">
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      Successfully undid: <%= flash[:undo_success].html_safe %>
-    </div>
-  <% end %>
-  <% if flash[:undo_failure] %>
-    <div class="alert alert-secondary alert-dismissible">
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      <%= simple_format(flash[:undo_failure]) %>
-    </div>
-  <% end %>
-  <%= yield %>
-
-</div>
-<!-- Footer-->
-<footer class="border-top py-2">
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2022</div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top flex-shrink-0">
+    <div class="container-fluid">
+      <%= link_to "Library", root_path, class: 'navbar-brand' %>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav me-auto">
+          <%= yield :nav %>
+        </ul>
       </div>
     </div>
+  </nav>
+  <!-- Main Content-->
+  <div class="container-md pb-2 flex-grow-1">
+    <% if flash[:undo_success] %>
+      <div class="alert alert-success alert-dismissible col-auto">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        Successfully undid: <%= flash[:undo_success].html_safe %>
+      </div>
+    <% end %>
+    <% if flash[:undo_failure] %>
+      <div class="alert alert-secondary alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <%= simple_format(flash[:undo_failure]) %>
+      </div>
+    <% end %>
+    <%= yield %>
+
   </div>
-</footer>
+  <!-- Footer-->
+  <footer class="border-top py-2 flex-shrink-0">
+    <div class="container px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+          <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2022</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
 </body>
 </html>

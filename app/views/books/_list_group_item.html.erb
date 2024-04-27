@@ -14,14 +14,18 @@
     <% end %>
     <% if local_assigns[:include_buttons] %>
       <div class="col-auto mh-100 m-n2 py-0 justify-content-between">
-        <%= link_to new_book_corrupt_chapter_path(book), class: %w[col-auto mh-100 p-0 justify-content-center text-decoration-none], style: "height:100%" do %>
+        <%= link_to book.next_clean_link,
+                    class: %w[col-auto mh-100 p-0 justify-content-center text-decoration-none],
+                    style: "height:100%",
+                    target: "_blank",
+                    rel: "noreferrer" do %>
           <i class="bi bi-plus-square-fill text-<%= book.status_class %> text-decoration-none py-0" style="font-size: 40px; line-height: 40px"
           data-bs-toggle="tooltip" data-bs-placement="left" title="Add chapter from JJWXC"></i>
         <% end %>
         <% link_classes = %w[col-auto mh-100 py-0 justify-content-center] %>
-        <% link_classes.push("invisible") unless book.latest_chapter_number > book.latest_translated_chapter %>
+        <% link_classes.push("invisible") unless book.latest_chapter_number > book.latest_tl_ch_number %>
 
-        <%= link_to edit_book_chapter_path(book, book.latest_translated_chapter + 1),
+        <%= link_to edit_book_chapter_path(book, book.latest_tl_ch_number + 1),
                     class: link_classes, style: "height:100%" do %>
           <i class="bi bi-translate text-<%= book.status_class %> py-0" style="font-size: 40px; line-height: 40px"
           data-bs-toggle="tooltip" data-bs-placement="left" title="Translate next chapter"></i>

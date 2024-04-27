@@ -22,13 +22,17 @@ class BooksController < ApplicationController
 
   def index
     @books = Book.all.sort
-  end
-
-  def new
-    @book = Book.new
+    @page_title = 'erys\'s danmei library'
   end
 
   def show; end
+
+  def new
+    @page_title = 'Add a new novel'
+    @book = Book.new
+  end
+
+  def edit; end
 
   def create
     populate_author
@@ -40,8 +44,6 @@ class BooksController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
-  def edit; end
 
   def update
     populate_author
@@ -56,7 +58,7 @@ class BooksController < ApplicationController
 
   def backup
     response.headers['Content-Disposition'] =
-      "attachment; filename=#{@book.short_name}-#{Time.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
+      "attachment; filename=#{@book.short_name}-#{Time.zone.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
     zip_tricks_stream do |zip|
       @book.add_to_zip(zip)
     end
@@ -123,7 +125,8 @@ class BooksController < ApplicationController
     update_chapter_text_from_zip(chapter, dir_name, zip)
 
     # fix updated_at to match archive since active storage upload touches it
-    chapter.touch(time: ch_metadata[:updated_at])
+    #
+    chapter.touch(time: ch_metadata[:updated_at]) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def update_chapter_text_from_zip(chapter, dir_name, zip)
@@ -135,6 +138,7 @@ class BooksController < ApplicationController
 
   def find_book
     @book = Book.find_by(short_name: params[:short_name])
+    @page_title = @book.tl_title
   end
 
   def sort_chapters
@@ -153,7 +157,7 @@ class BooksController < ApplicationController
 
   def generate_short_name(tl_title, short_name)
     if short_name.blank? && tl_title.present?
-      tl_title.squish.split(' ').map { |word| word[0] }.join.upcase
+      tl_title.squish.split.pluck(0).join.upcase
     else
       short_name&.squish&.gsub(' ', '-')&.upcase
     end

@@ -63,7 +63,7 @@ class Chapter < ApplicationRecord
     og_text.attach(
       io: StringIO.new(@og_text_data),
       filename: 'og_data.txt',
-      content_type: 'text/plain'
+      content_type: 'text/plain',
     )
   end
 
@@ -83,7 +83,7 @@ class Chapter < ApplicationRecord
     tl_text.attach(
       io: StringIO.new(@tl_text_data),
       filename: 'tl_data.txt',
-      content_type: 'text/plain'
+      content_type: 'text/plain',
     )
   end
 
@@ -113,9 +113,9 @@ class Chapter < ApplicationRecord
   end
 
   def status
-    if og_text? && tl_text?
+    if og_text_attached? && tl_text_attached?
       TRANSLATED
-    elsif og_text?
+    elsif og_text_attached?
       SCRUBBED
     else
       PLACEHOLDER
@@ -126,12 +126,12 @@ class Chapter < ApplicationRecord
     STATUS_TO_CLASS[status]
   end
 
-  def og_text?
-    @has_og_text ||= og_text.attached? && og_text.byte_size&.positive?
+  def og_text_attached?
+    @og_text_attached ||= og_text.attached? && og_text.byte_size&.positive?
   end
 
-  def tl_text?
-    @has_tl_text ||= tl_text.attached? && tl_text.byte_size&.positive?
+  def tl_text_attached?
+    @tl_text_attached ||= tl_text.attached? && tl_text.byte_size&.positive?
   end
 
   private

@@ -16,6 +16,14 @@ class ChaptersController < ApplicationController
     @chapter.ch_number = @book.new_chapter_number
   end
 
+  # TODO: #8 delete+destroy
+  # def delete
+  # end
+
+  def edit
+    init_chapters
+  end
+
   def create
     @chapter = Chapter.new(**chapter_params, book_id: @book.id)
     unless @chapter.save
@@ -25,14 +33,6 @@ class ChaptersController < ApplicationController
     @chapter.tl_text_data = params[:chapter][:tl_text_data]
     @chapter.og_text_data = params[:chapter][:og_text_data]
     redirect_to book_chapter_path(@book, @chapter)
-  end
-
-  # TODO: #8 delete+destroy
-  # def delete
-  # end
-
-  def edit
-    init_chapters
   end
 
   def update
@@ -96,6 +96,7 @@ class ChaptersController < ApplicationController
 
   def init_chapters
     @chapter = @book.chapters.find { |chapter| chapter.ch_number.to_s == params[:ch_number] }
+    @page_title = "#{@book.short_name} - Chapter #{@chapter.ch_number}"
     @previous = @chapter.previous
     @next = @chapter.next
   end

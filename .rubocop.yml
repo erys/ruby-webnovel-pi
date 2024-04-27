@@ -1,4 +1,10 @@
+require:
+  - ./lib/rubocop_autocorrect.rb
+  - rubocop-rails
+inherit_from: .rubocop_todo.yml
+
 AllCops:
+  NewCops: enable
   Exclude:
     - 'db/migrate/*'
     - 'db/schema.rb'
@@ -15,5 +21,20 @@ AllCops:
     - '.git/**/*'
     - 'config.ru'
     - 'rakefile'
-Style/EndOfLine:
+Layout/EndOfLine:
   EnforcedStyle: lf
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - 'app/helpers/**/*'
+    - 'test/**/*'
+    - 'app/models/application_record.rb'
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Metrics/ClassLength:
+  Max: 150

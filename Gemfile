@@ -72,6 +72,7 @@ group :development do
   gem 'annotate'
 
   gem 'rubocop'
+  gem 'rubocop-rails', require: false
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"

@@ -9,6 +9,8 @@ class CorruptChapter
   # @return [Integer]
   attr_accessor :book_id
   # @return [Integer]
+  attr_accessor :original_chapter_id
+  # @return [Integer]
   attr_accessor :ch_number
   # @return [CorruptCharacterList]
   attr_accessor :corrupt_chars
@@ -53,9 +55,7 @@ class CorruptChapter
     init_occurrences
     corrupt_hash = {}
     parse_main_text(corrupt_hash)
-    @corrupt_chars = CorruptCharacterList.new(
-      all_characters: corrupt_hash.values.sort.reverse!
-    )
+    @corrupt_chars = CorruptCharacterList.new(all_characters: corrupt_hash.values.sort.reverse!)
     @possible_replacements = @possible_chars.select { |_, value| (value[1]).zero? }.keys
     @parsed = true
   end
@@ -124,7 +124,7 @@ class CorruptChapter
   def init_occurrences
     book = Book.includes(character_occurrences: :character).find(book_id)
     book_occurrences = book.character_occurrences.sort.reverse!
-    @possible_chars = book_occurrences.map { |occurrence| [occurrence.character.character, [occurrence.id, 0]] }.to_h
+    @possible_chars = book_occurrences.to_h { |occurrence| [occurrence.character.character, [occurrence.id, 0]] }
   end
 
   def finalize_text

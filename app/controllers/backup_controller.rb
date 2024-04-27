@@ -7,7 +7,7 @@ class BackupController < ApplicationController
   # generates database and chapter backup
   def generate
     fresh_when Time.current
-    send_file_headers! filename: "webnovel-library-backup-#{Time.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
+    send_file_headers! filename: "webnovel-library-backup-#{Time.zone.now.strftime('%Y-%m-%d_%H_%M_%S')}.zip"
     zip_tricks_stream do |zip|
       book_dirs = []
       Book.find_each do |book|

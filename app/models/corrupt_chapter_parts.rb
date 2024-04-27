@@ -55,7 +55,7 @@ class CorruptChapterParts
 
   # @return [String]
   def display_text
-    return main_text unless substitutions.present?
+    return main_text if substitutions.blank?
 
     new_text = main_text
 

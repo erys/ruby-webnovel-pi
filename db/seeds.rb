@@ -9,7 +9,7 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 # character list
-character_file = File.read(Rails.root.join('db/data/initial_character_list.dat'))
+character_file = Rails.root.join('db/data/initial_character_list.dat').read
 character_lines = character_file.split("\n")
 character_lines.each do |line|
   data = line.split("\t")

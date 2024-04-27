@@ -20,9 +20,9 @@ class CorruptChapterJson < CorruptChapter
   attr_accessor :corrupt_chars_json, :corrupt_chars_index, :parts_json
 
   def attributes
-    JSON_SYMBOLS.map do |symbol|
+    JSON_SYMBOLS.to_h do |symbol|
       [symbol.to_s, nil]
-    end.to_h
+    end
   end
 
   def to_json(*_args)
@@ -38,7 +38,7 @@ class CorruptChapterJson < CorruptChapter
       chap.parts = CorruptChapterParts.new(chap.parts_json)
       chap.corrupt_chars = CorruptCharacterList.new(
         all_characters: chap.corrupt_chars_json&.map { |hash| CorruptCharacter.new(hash) },
-        index: chap.corrupt_chars_index
+        index: chap.corrupt_chars_index,
       )
       chap
     end

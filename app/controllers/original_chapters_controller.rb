@@ -9,9 +9,9 @@ class OriginalChaptersController < ApplicationController
 
     if @original_chapter.save
       @original_chapter.download_font
-      render json: { book: @original_chapter.book.tl_title,
+      render json: { book: @original_chapter.book.short_name,
                      ch_number: @original_chapter.ch_number,
-                     font: @original_chapter.font_file.attached? ? url_for(@original_chapter.font_file) : nil },
+                     original_chapter_id: @original_chapter.id },
              status: :created
     else
       render json: @original_chapter.errors, status: :unprocessable_entity
@@ -19,7 +19,7 @@ class OriginalChaptersController < ApplicationController
   end
 
   def clean
-    @book = Book.find_by_short_name(params[:book_short_name])
+    @book = Book.find_by(short_name: params[:book_short_name])
     @original_chapter = OriginalChapter.where(book: @book, ch_number: params[:ch_number]).order(created_at: :desc).first
     unless @original_chapter
       redirect_to new_book_corrupt_chapter_path(@book)
@@ -44,7 +44,7 @@ class OriginalChaptersController < ApplicationController
       :main_text,
       :subtitle,
       :title,
-      substitutions: []
+      substitutions: [],
     )
     og_chap_params[:book] = Book.find_by(jjwxc_id: params[:jjwxc_id])
     og_chap_params

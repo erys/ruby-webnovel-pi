@@ -103,7 +103,11 @@ class BooksController < ApplicationController
   end
 
   def maybe_create_author(og_name:, **author_params)
-    Author.create_with(**author_params).find_or_create_by(og_name:)
+    if author_params.present?
+      Author.create_with(**author_params).find_or_create_by(og_name:)
+    else
+      Author.find_or_create_by(og_name:)
+    end
   end
 
   def restore_book(zip, dir_name = nil)

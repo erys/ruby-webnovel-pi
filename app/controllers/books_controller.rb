@@ -61,7 +61,7 @@ class BooksController < ApplicationController
     if @book
       render json: { short_name: @book.short_name, status: @book.original_status, latest_chapter: @book.last_chapter }
     else
-      render status: :not_found
+      render json: {}, status: :not_found
     end
   end
 

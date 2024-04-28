@@ -55,6 +55,16 @@ class BooksController < ApplicationController
     end
   end
 
+  def status
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+
+    if @book
+      render json: { short_name: @book.short_name, status: @book.original_status, latest_chapter: @book.last_chapter }
+    else
+      render status: :not_found
+    end
+  end
+
   def update
     populate_author
     @book.update!(book_params)

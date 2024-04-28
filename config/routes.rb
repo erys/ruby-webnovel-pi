@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
     resources :books, only: [] do
       post 'create', to: 'books#create_api', on: :collection
+      get ':jjwxc_id', to: 'books#status', on: :collection
     end
   end
 

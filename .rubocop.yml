@@ -21,6 +21,7 @@ AllCops:
     - '.git/**/*'
     - 'config.ru'
     - 'rakefile'
+    - 'lib/ttf.rb'
 Layout/EndOfLine:
   EnforcedStyle: lf
 

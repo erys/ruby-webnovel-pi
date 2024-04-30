@@ -10,6 +10,8 @@ class CorruptCharacter
     occurrences
     correct_char
     first_occurrence
+    likely_replacement
+    glyph_md5
   ].freeze
   attr_accessor(*CHAR_ATTR)
 
@@ -20,6 +22,10 @@ class CorruptCharacter
 
   def replace(og_text)
     og_text.gsub!(og_bytes, correct_char)
+  end
+
+  def confirm_guess
+    @correct_char ||= @likely_replacement # rubocop:disable Style/MemoizedInstanceVariableName
   end
 
   def reset_char

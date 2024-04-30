@@ -1,0 +1,31 @@
+<% content_for :nav do %>
+  <%= render 'nav' %>
+<% end %>
+
+<div class="row mb-2">
+  <h1 class="text-center">
+    <% if @author.jjwxc_id %>
+      <%= link_to @author.full_display, @author.jjwxc_link, target: "_blank" %>
+    <% else %>
+      <%= @author.full_display %>
+    <% end %>
+  </h1>
+</div>
+
+<div class="list-group mb-2">
+  <%= render partial: @author.books, include_buttons: false %>
+</div>
+
+
+<div class="row">
+  <div class="col-auto">
+    <%= link_to "Edit", edit_author_path, class: %w[btn btn-primary] %>
+  </div>
+  <% if @author.book_count == 0 %>
+    <div class="col-auto">
+      <%= button_to "Delete Empty Author", @author, method: :delete, class: "btn btn-danger", form: { data: {
+        turbo_confirm: "Are you sure you want to delete #{@author.full_display}? This will also delete #{@author.book_count} book(s) and cannot be undone"
+      } } %>
+    </div>
+  <% end %>
+</div>

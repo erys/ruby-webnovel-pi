@@ -21,6 +21,7 @@ AllCops:
     - '.git/**/*'
     - 'config.ru'
     - 'rakefile'
+    - 'lib/ttf.rb'
 Layout/EndOfLine:
   EnforcedStyle: lf
 
@@ -32,6 +33,11 @@ Style/Documentation:
     - 'app/helpers/**/*'
     - 'test/**/*'
     - 'app/models/application_record.rb'
+    - 'db/migrate/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/**/*.rb'
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma

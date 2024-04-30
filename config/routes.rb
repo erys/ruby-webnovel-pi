@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   root 'books#index'
 
+  resources :authors
   resources :books, param: :short_name do
     post :backup, on: :member
     post :restore, on: :collection
@@ -39,6 +40,11 @@ Rails.application.routes.draw do
 
     resources :original_chapters, only: [] do
       post ':jjwxc_id/:ch_number/', to: 'original_chapters#create', on: :collection
+    end
+
+    resources :books, only: [] do
+      post 'create', to: 'books#create_api', on: :collection
+      get ':jjwxc_id', to: 'books#status', on: :collection
     end
   end
 

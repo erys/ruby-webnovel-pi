@@ -1,0 +1,31 @@
+<%= nice_form_with model: @author do |form| %>
+  <% if author.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(author.errors.count, "error") %> prohibited this author from being saved:</h2>
+
+      <ul>
+        <% author.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row justify-content-start mb-2">
+    <div class="col">
+      <%= form.floating_label_text_field :og_name, 'Original Name', {}, {class: %w(mb-3)} %>
+    </div>
+    <div class="col">
+      <%= form.floating_label_text_field :tl_name, 'Translated Name', {}, {class: %w(mb-3)} %>
+    </div>
+    <div class="col">
+      <%= form.floating_label_number_field :jjwxc_id, "Author ID", {}, {class: %w(mb-3)} %>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-auto">
+      <%= form.submit class: 'form-control btn btn-primary'%>
+    </div>
+  </div>
+<% end %>

@@ -30,7 +30,10 @@
   </div>
 
   <div class="row mb-2">
-    <div class="col">
+    <div class="col-md-6">
+      <%= form.floating_label_text_area :og_description, 'Original Description', {style: 'height: 200px'}, {class: %w(mb-3)} %>
+    </div>
+    <div class="col-md-6">
       <%= form.floating_label_text_area :description, 'Description', {style: 'height: 200px'}, {class: %w(mb-3)} %>
     </div>
   </div>

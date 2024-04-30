@@ -77,10 +77,12 @@ class ChaptersController < ApplicationController
     case params[:save]
     when '& continue'
       redirect_to edit_book_chapter_path(@book, @chapter)
-    when '& clean'
-      redirect_to helpers.clean_chapter_url
-    when '& edit next'
-      redirect_to edit_book_chapter_path(@book, @next)
+    when '& next'
+      if @next
+        redirect_to edit_book_chapter_path(@book, @next)
+      else
+        redirect_to helpers.clean_chapter_url(@book, @chapter.ch_number + 1)
+      end
     else
       redirect_to book_chapter_url(@book)
     end

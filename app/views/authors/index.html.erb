@@ -1,0 +1,9 @@
+<h1>Authors</h1>
+
+<div id="authors" class="list-group">
+  <% @authors.each do |author| %>
+    <%= render author %>
+  <% end %>
+</div>
+
+<%= link_to "New author", new_author_path %>

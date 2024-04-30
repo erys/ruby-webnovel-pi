@@ -9,9 +9,15 @@ class OriginalChaptersController < ApplicationController
 
     if @original_chapter.save
       @original_chapter.download_font
-      render json: { book: @original_chapter.book.short_name,
-                     ch_number: @original_chapter.ch_number,
-                     original_chapter_id: @original_chapter.id },
+
+      auto_cleaned = maybe_auto_clean
+
+      render json: {
+               book: @original_chapter.book.short_name,
+               ch_number: @original_chapter.ch_number,
+               original_chapter_id: @original_chapter.id,
+               auto_cleaned:
+             },
              status: :created
     else
       render json: @original_chapter.errors, status: :unprocessable_entity
@@ -21,13 +27,18 @@ class OriginalChaptersController < ApplicationController
   def clean
     @book = Book.find_by(short_name: params[:book_short_name])
     @original_chapter = OriginalChapter.where(book: @book, ch_number: params[:ch_number]).order(created_at: :desc).first
-    unless @original_chapter
+    if @original_chapter.blank?
       redirect_to new_book_corrupt_chapter_path(@book)
       return
     end
 
+    if @original_chapter.equiv_chapter
+      redirect_to edit_book_chapter_path(@book, @original_chapter.equiv_chapter)
+      return
+    end
+
     @corrupt_chapter = @original_chapter.as_corrupt_chapter
-    helpers.cache_chapter
+    helpers.cache_chapter(@corrupt_chapter)
 
     redirect_to edit_book_corrupt_chapter_path(@book, @corrupt_chapter.id)
   end
@@ -48,5 +59,20 @@ class OriginalChaptersController < ApplicationController
     )
     og_chap_params[:book] = Book.find_by(jjwxc_id: params[:jjwxc_id])
     og_chap_params
+  end
+
+  def maybe_auto_clean
+    return false if @original_chapter.equiv_chapter.present?
+
+    @corrupt_chapter = @original_chapter.as_corrupt_chapter
+    @corrupt_chapter.parse
+    if @corrupt_chapter.corrupt_chars.all_guessed?
+      @corrupt_chapter.corrupt_chars.confirm_guesses
+      @chapter = @corrupt_chapter.init_chapter
+      @chapter.save!
+      return true
+    end
+
+    false
   end
 end

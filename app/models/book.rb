@@ -7,6 +7,7 @@
 #  id                 :bigint           not null, primary key
 #  description        :text
 #  last_chapter       :integer
+#  og_description     :text
 #  og_source          :string
 #  og_source_link     :string
 #  og_title           :string           not null
@@ -178,6 +179,7 @@ class Book < ApplicationRecord
     latest_translated_chapter&.ch_number || 0
   end
 
+  # @return [Integer]
   def new_chapter_number
     (latest_chapter&.ch_number || 0) + 1
   end

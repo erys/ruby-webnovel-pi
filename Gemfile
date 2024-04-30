@@ -54,6 +54,9 @@ gem 'rack-cors'
 # for streaming zip files
 gem 'zip_tricks'
 
+# for parsing ttf files
+gem 'kaitai-struct'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
@@ -73,7 +76,6 @@ group :development do
 
   gem 'rubocop'
   gem 'rubocop-rails', require: false
-
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 

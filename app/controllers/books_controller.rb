@@ -45,6 +45,26 @@ class BooksController < ApplicationController
     end
   end
 
+  def create_api
+    @author = maybe_create_author(**author_params)
+    @book = Book.new(book_params)
+    if @book.save
+      render json: { book: @book.id }
+    else
+      render json: { errors: @book.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def status
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+
+    if @book
+      render json: { short_name: @book.short_name, status: @book.original_status, latest_chapter: @book.last_chapter }
+    else
+      render json: {}, status: :not_found
+    end
+  end
+
   def update
     populate_author
     @book.update!(book_params)
@@ -79,11 +99,15 @@ class BooksController < ApplicationController
   private
 
   def populate_author
-    @author = maybe_create_author(params[:book][:author_cn_name])
+    @author = maybe_create_author(og_name: params[:book][:author_cn_name])
   end
 
-  def maybe_create_author(og_name)
-    Author.find_by(og_name:) || Author.create(og_name:)
+  def maybe_create_author(og_name:, **author_params)
+    if author_params.present?
+      Author.create_with(**author_params).find_or_create_by(og_name:)
+    else
+      Author.find_or_create_by(og_name:)
+    end
   end
 
   def restore_book(zip, dir_name = nil)
@@ -92,7 +116,7 @@ class BooksController < ApplicationController
     book = find_dup_book(metadata_json)
 
     book_params = metadata_json.slice(*Book.column_names)
-    book_params[:author] = maybe_create_author(metadata_json[:author][:og_name])
+    book_params[:author] = maybe_create_author(**metadata_json[:author].symbolize_keys)
     if book && book.updated_at.iso8601 < metadata_json[:updated_at]
       book.update!(book_params)
     elsif book.nil?
@@ -145,21 +169,29 @@ class BooksController < ApplicationController
     @chapters = @book.chapters_sorted
   end
 
+  def author_params
+    params.require(:author).permit(:og_name, :jjwxc_id)
+  end
+
   def book_params
     inner_params = params.require(:book).permit(:tl_title, :og_title, :description, :short_name,
                                                 :jjwxc_id, :original_status, :translation_status,
-                                                :last_chapter)
+                                                :last_chapter, :og_description)
     inner_params[:tl_title] = inner_params[:tl_title]&.squish
     inner_params[:author_id] = @author.id
-    inner_params[:short_name] = generate_short_name(inner_params[:tl_title], inner_params[:short_name])
+    inner_params[:short_name] = generate_short_name(
+      inner_params[:tl_title],
+      inner_params[:short_name],
+      inner_params[:jjwxc_id],
+    )
     inner_params
   end
 
-  def generate_short_name(tl_title, short_name)
+  def generate_short_name(tl_title, short_name, jjwxc_id)
     if short_name.blank? && tl_title.present?
       tl_title.squish.split.pluck(0).join.upcase
     else
-      short_name&.squish&.gsub(' ', '-')&.upcase
+      short_name&.squish&.gsub(' ', '-')&.upcase.presence || jjwxc_id
     end
   end
 end

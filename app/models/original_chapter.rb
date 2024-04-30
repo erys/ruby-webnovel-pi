@@ -38,11 +38,15 @@ class OriginalChapter < ApplicationRecord
     return if font_file.attached? && !force
 
     font_file.attach(
-      io: URI.open("https://static.jjwxc.net/tmp/fonts/#{font_name}.woff2?h=my.jjwxc.net"),
-      content_type: 'font/woff2',
-      filename: 'font.woff2',
+      io: URI.open("https://static.jjwxc.net/tmp/fonts/#{font_name}.ttf?h=my.jjwxc.net"),
+      content_type: 'font/ttf',
+      filename: 'font.ttf',
       identify: false,
     )
+  end
+
+  def equiv_chapter
+    @equiv_chapter ||= Chapter.find_by(book_id:, ch_number:)
   end
 
   def html_data=(value)

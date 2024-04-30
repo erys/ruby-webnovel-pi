@@ -15,5 +15,7 @@ character_lines.each do |line|
   data = line.split("\t")
   next unless data.length == 2
 
-  Character.create(character: data[0], master_freq: data[1], global_occurrences: 0)
+  unless Character.find_by(character: data[0])
+    Character.create(character: data[0], master_freq: data[1], global_occurrences: 0)
+  end
 end

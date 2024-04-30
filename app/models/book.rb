@@ -179,6 +179,7 @@ class Book < ApplicationRecord
     latest_translated_chapter&.ch_number || 0
   end
 
+  # @return [Integer]
   def new_chapter_number
     (latest_chapter&.ch_number || 0) + 1
   end

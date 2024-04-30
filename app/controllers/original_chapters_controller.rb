@@ -38,7 +38,7 @@ class OriginalChaptersController < ApplicationController
     end
 
     @corrupt_chapter = @original_chapter.as_corrupt_chapter
-    helpers.cache_chapter
+    helpers.cache_chapter(@corrupt_chapter)
 
     redirect_to edit_book_corrupt_chapter_path(@book, @corrupt_chapter.id)
   end

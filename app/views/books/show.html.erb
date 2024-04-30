@@ -24,10 +24,10 @@
       <div class="card-header">Chapters</div>
       <%# TODO: #19 add subtitles to chapter display, at least on wide screens %>
       <div class="list-group list-group-flush">
-        <% corrupt_id = corrupt_chapter_id(@book.new_chapter_number) %>
+        <% corrupt_id = corrupt_chapter_id(@book, @book.new_chapter_number) %>
         <% maybe_chapter = Rails.cache.read(corrupt_id) if corrupt_id %>
         <% if @book.latest_chapter.present? %>
-          <%= link_to "Clean chapter", clean_chapter_url, class: "list-group-item list-group-item-action list-group-item-info" %>
+          <%= link_to "Clean chapter", clean_chapter_url(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
           <div class="list-group-item disabled">Latest Chapter:</div>
           <% chapter = @book.latest_chapter %>
           <% classes = "list-group-item list-group-item-action list-group-item-primary" %>
@@ -38,7 +38,7 @@
           <% classes = "list-group-item list-group-item-action" %>
           <%= link_to chapter.pretty_title, book_chapter_path(@book, chapter), class: classes %>
         <% end %>
-        <%= link_to "Clean chapter", clean_chapter_url, class: "list-group-item list-group-item-action list-group-item-info" %>
+        <%= link_to "Clean chapter", clean_chapter_url(@book), class: "list-group-item list-group-item-action list-group-item-info" %>
       </div>
     </div>
   </div>

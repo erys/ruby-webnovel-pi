@@ -26,6 +26,7 @@ class CorruptCharacterList
     ttf = JjwxcTtf.from_string(og_chapter.font_file.download)
     all_characters.each do |corrupt_char|
       corrupt_char.glyph_md5 = ttf.md5_glyph(corrupt_char.og_bytes)
+      Rails.logger.info("bytes: #{corrupt_char.og_bytes.codepoints[0]}, glyph: #{corrupt_char.glyph_md5}")
       corrupt_char.likely_replacement = glyphs[corrupt_char.glyph_md5]
     end
   rescue StandardError => e

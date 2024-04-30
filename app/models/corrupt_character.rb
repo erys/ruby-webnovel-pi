@@ -24,6 +24,10 @@ class CorruptCharacter
     og_text.gsub!(og_bytes, correct_char)
   end
 
+  def confirm_guess
+    @correct_char ||= @likely_replacement # rubocop:disable Style/MemoizedInstanceVariableName
+  end
+
   def reset_char
     bad_char = correct_char
     @correct_char = nil

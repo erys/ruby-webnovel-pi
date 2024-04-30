@@ -23,16 +23,21 @@ class CorruptCharacterList
     og_chapter = OriginalChapter.find(original_chapter_id)
     return unless og_chapter.font_file.attached?
 
-    Rails.logger.info("glyphs: #{glyphs}")
-
     ttf = JjwxcTtf.from_string(og_chapter.font_file.download)
     all_characters.each do |corrupt_char|
       corrupt_char.glyph_md5 = ttf.md5_glyph(corrupt_char.og_bytes)
       corrupt_char.likely_replacement = glyphs[corrupt_char.glyph_md5]
-      Rails.logger.info(corrupt_char)
     end
   rescue StandardError => e
     Rails.logger.error(e)
+  end
+
+  def all_guessed?
+    all_characters.all? { |char| char.likely_replacement.present? }
+  end
+
+  def confirm_guesses
+    all_characters.each(&:confirm_guess)
   end
 
   def progress_percent

@@ -45,6 +45,10 @@ class OriginalChapter < ApplicationRecord
     )
   end
 
+  def equiv_chapter
+    @equiv_chapter ||= Chapter.find_by(book_id:, ch_number:)
+  end
+
   def html_data=(value)
     value = value&.force_encoding('UTF-8').presence
     return if html_data == value

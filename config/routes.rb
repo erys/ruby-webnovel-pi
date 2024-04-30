@@ -42,9 +42,10 @@ Rails.application.routes.draw do
       post ':jjwxc_id/:ch_number/', to: 'original_chapters#create', on: :collection
     end
 
-    resources :books, only: [] do
+    resources :books, only: [], param: :jjwxc_id do
       post 'create', to: 'books#create_api', on: :collection
-      get ':jjwxc_id', to: 'books#status', on: :collection
+      patch '', to: 'books#update_api', on: :member
+      get '', to: 'books#status', on: :member
     end
   end
 

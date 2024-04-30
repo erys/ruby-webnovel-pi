@@ -40,4 +40,12 @@ class Author < ApplicationRecord
   def book_count
     books.length
   end
+
+  def self.maybe_create_author(og_name:, **author_params)
+    if author_params.present?
+      create_with(**author_params).find_or_create_by(og_name:)
+    else
+      find_or_create_by(og_name:)
+    end
+  end
 end

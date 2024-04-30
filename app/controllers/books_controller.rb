@@ -17,7 +17,9 @@ class BooksController < ApplicationController
 
   DEFAULT_CATEGORY = :current
 
+  before_action :populate_author, only: %i[update create update_api create_api]
   before_action :find_book, only: %i[show edit update destroy backup]
+  before_action :find_jjwxc_book, only: %i[update_api status]
   before_action :sort_chapters, only: %i[show backup]
 
   def index
@@ -35,7 +37,6 @@ class BooksController < ApplicationController
   def edit; end
 
   def create
-    populate_author
     @book = Book.new(book_params)
 
     if @book.save
@@ -46,7 +47,7 @@ class BooksController < ApplicationController
   end
 
   def create_api
-    @author = maybe_create_author(**author_params)
+    @author = Author.maybe_create_author(**author_params)
     @book = Book.new(book_params)
     if @book.save
       render json: { book: @book.id }
@@ -55,9 +56,18 @@ class BooksController < ApplicationController
     end
   end
 
-  def status
-    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+  def update_api
+    @author = Author.maybe_create_author(**author_params)
+    if @author.jjwxc_id.blank?
+      @author.jjwxc_id = params[:author][:jjwxc_id]
+      @author.save!
+    end
+    @book.update!(api_update_params)
 
+    render json: { short_name: @book.short_name, status: @book.original_status, latest_chapter: @book.last_chapter }
+  end
+
+  def status
     if @book
       render json: { short_name: @book.short_name, status: @book.original_status, latest_chapter: @book.last_chapter }
     else
@@ -66,7 +76,6 @@ class BooksController < ApplicationController
   end
 
   def update
-    populate_author
     @book.update!(book_params)
     redirect_to @book
   end
@@ -87,10 +96,10 @@ class BooksController < ApplicationController
   def restore
     Zip::File.open_buffer(params[:backup].to_io) do |zip|
       if zip.find_entry('LIBRARY')
-        zip.read('LIBRARY').split("\n").each { |short_name| restore_book(zip, short_name) }
+        zip.read('LIBRARY').split("\n").each { |short_name| Backup.restore_book(zip, short_name) }
         redirect_to books_path
       else
-        book = restore_book(zip)
+        book = Backup.restore_book(zip)
         redirect_to book
       end
     end
@@ -99,65 +108,7 @@ class BooksController < ApplicationController
   private
 
   def populate_author
-    @author = maybe_create_author(og_name: params[:book][:author_cn_name])
-  end
-
-  def maybe_create_author(og_name:, **author_params)
-    if author_params.present?
-      Author.create_with(**author_params).find_or_create_by(og_name:)
-    else
-      Author.find_or_create_by(og_name:)
-    end
-  end
-
-  def restore_book(zip, dir_name = nil)
-    zip.get_entry(File.nice_join(dir_name, 'BOOK'))
-    metadata_json = JSON.parse(zip.read(File.nice_join(dir_name, 'metadata.json'))).with_indifferent_access
-    book = find_dup_book(metadata_json)
-
-    book_params = metadata_json.slice(*Book.column_names)
-    book_params[:author] = maybe_create_author(**metadata_json[:author].symbolize_keys)
-    if book && book.updated_at.iso8601 < metadata_json[:updated_at]
-      book.update!(book_params)
-    elsif book.nil?
-      book = Book.create!(book_params)
-    end
-
-    metadata_json[:chapters].each do |chapter_json|
-      restore_chapter(zip, dir_name, book, chapter_json)
-    end
-    book
-  end
-
-  def find_dup_book(book_metadata)
-    book = nil
-    book = Book.find_by(jjwxc_id: book_metadata[:jjwxc_id]) if book_metadata[:jjwxc_id]
-    book || Book.find_by(og_title: book_metadata[:og_title])
-  end
-
-  def restore_chapter(zip, dir_name, book, ch_metadata)
-    chapter = book.chapter(ch_metadata[:ch_number])
-    return chapter if chapter && (chapter.updated_at.iso8601 >= ch_metadata[:updated_at])
-
-    if chapter
-      chapter.update!(ch_metadata)
-    else
-      ch_metadata[:book] = book
-      chapter = Chapter.create!(ch_metadata)
-    end
-
-    update_chapter_text_from_zip(chapter, dir_name, zip)
-
-    # fix updated_at to match archive since active storage upload touches it
-    #
-    chapter.touch(time: ch_metadata[:updated_at]) # rubocop:disable Rails/SkipsModelValidations
-  end
-
-  def update_chapter_text_from_zip(chapter, dir_name, zip)
-    english = zip.find_entry(chapter.get_english_file_name(dir_name))
-    chinese = zip.find_entry(chapter.get_chinese_file_name(dir_name))
-    chapter.og_text_data = chinese.get_input_stream.read if chinese
-    chapter.tl_text_data = english.get_input_stream.read if english
+    @author = Author.maybe_create_author(**author_params)
   end
 
   def find_book
@@ -165,12 +116,26 @@ class BooksController < ApplicationController
     @page_title = @book.tl_title
   end
 
+  def find_jjwxc_book
+    @book = Book.find_by(jjwxc_id: params[:jjwxc_id])
+  end
+
   def sort_chapters
     @chapters = @book.chapters_sorted
   end
 
   def author_params
-    params.require(:author).permit(:og_name, :jjwxc_id)
+    if params.key?(:author)
+      params.require(:author).permit(:og_name, :jjwxc_id)
+    else
+      { og_name: params[:book][:author_cn_name] }
+    end
+  end
+
+  def api_update_params
+    inner_params = params.require(:book).permit(:og_title, :original_status, :last_chapter, :og_description)
+    inner_params[:author_id] = @author.id
+    inner_params
   end
 
   def book_params

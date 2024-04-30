@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_27_223053) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_30_000414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -102,6 +102,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_223053) do
     t.integer "master_freq", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "glyph_md5"
+    t.index ["character"], name: "index_characters_on_character", unique: true
+    t.index ["glyph_md5"], name: "index_characters_on_glyph_md5", unique: true
   end
 
   create_table "original_chapters", force: :cascade do |t|

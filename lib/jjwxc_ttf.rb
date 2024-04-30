@@ -37,6 +37,14 @@ class JjwxcTtf
     Digest::MD5.hexdigest(find_glyph(char))
   end
 
+  def find_character(corrupt)
+    Character.find_by(glyph_md5: md5_glyph(corrupt))
+  end
+
+  def update_glyph(character, corrupt)
+    Character.find_by(character:).update!(glyph_md5: md5_glyph(corrupt))
+  end
+
   def get_glyph(index)
     offset = @glyph_offsets[index]
     length = @glyph_offsets[index + 1] - offset

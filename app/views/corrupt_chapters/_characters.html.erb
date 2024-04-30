@@ -1,6 +1,6 @@
 <% characters.each do |char| %>
   <% classes = best_guess == char ? 'btn btn-info clipboard-btn replacement-char' : 'btn btn-outline-info clipboard-btn replacement-char'  %>
-  <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn replacement-char',
+  <%= submit_tag char, class: classes,
 
                  'data-clipboard-action' => "copy",
                  'data-clipboard-text' => next_bytes

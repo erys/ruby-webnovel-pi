@@ -1,15 +1,35 @@
 # frozen_string_literal: true
 
+require 'jjwxc_ttf'
+
 # class representing progress of character replacement in a chapter
 class CorruptCharacterList
   include ActiveModel::API
-  attr_accessor :all_characters, :index
 
-  delegate :each, :map, :length, to: :@all_characters
+  # @return [Array<CorruptCharacter>]
+  attr_accessor :all_characters
+  attr_accessor :index
+
+  delegate :each, :map, :length, :index_by, to: :@all_characters
 
   def initialize(attributes = nil)
     super
     @index ||= 0
+  end
+
+  # @param original_chapter_id [Integer]
+  # @param glyphs [Hash{String=>String}]
+  def find_glyphs(original_chapter_id, glyphs)
+    og_chapter = OriginalChapter.find(original_chapter_id)
+    return unless og_chapter.font_file.attached?
+
+    ttf = JjwxcTtf.from_string(og_chapter.font_file.download)
+    all_characters.each do |corrupt_char|
+      corrupt_char.glyph_md5 = ttf.md5_glyph(corrupt_char.og_bytes)
+      corrupt_char.likely_replacement = glyphs[corrupt_char.glyph_md5]
+    end
+  rescue StandardError => e
+    Rails.logger.error(e)
   end
 
   def progress_percent

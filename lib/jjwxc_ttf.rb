@@ -6,9 +6,16 @@ require 'ttf'
 class JjwxcTtf
   attr_reader :cmap, :glyph_data, :ttf, :character_mapping, :glyphs, :num_glyphs, :glyph_offsets
 
-  def initialize(filename)
-    @filename = filename
-    @ttf = Ttf.from_file(filename)
+  def self.from_file(filename)
+    new(Kaitai::Struct::Stream.open(filename))
+  end
+
+  def self.from_string(str)
+    new(Kaitai::Struct::Stream.new(str))
+  end
+
+  def initialize(stream)
+    @ttf = Ttf.new(stream)
 
     parse
   end

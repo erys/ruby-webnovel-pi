@@ -60,7 +60,11 @@
         </div>
         <div class="row">
           <div class="d-flex flex-wrap">
-            <%= render 'characters' %>
+            <%= render 'characters',
+                       characters: @corrupt_chapter.possible_replacements,
+                       best_guess: @current_char.likely_replacement,
+                       next_bytes: @corrupt_chapter.next_bytes
+            %>
           </div>
         </div>
       </div>

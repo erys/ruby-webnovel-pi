@@ -1,8 +1,8 @@
-<%# TODO: #24 use same font as jjwxc (see C# version) %>
-<% @corrupt_chapter.possible_replacements.each do |char| %>
+<% characters.each do |char| %>
+  <% classes = best_guess == char ? 'btn btn-info clipboard-btn replacement-char' : 'btn btn-outline-info clipboard-btn replacement-char'  %>
   <%= submit_tag char, class: 'btn btn-outline-info clipboard-btn replacement-char',
 
                  'data-clipboard-action' => "copy",
-                 'data-clipboard-text' => @corrupt_chapter.next_bytes
+                 'data-clipboard-text' => next_bytes
   %>
 <% end %>

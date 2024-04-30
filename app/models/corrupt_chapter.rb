@@ -18,6 +18,8 @@ class CorruptChapter
   attr_accessor :possible_replacements
   # @return [Hash{String=>Array<Integer>}]
   attr_accessor :possible_chars
+  # @return [Hash{String=>String}]
+  attr_accessor :glyphs
   # @return [Boolean]
   attr_accessor :parsed
   # @return [String]
@@ -56,6 +58,8 @@ class CorruptChapter
     corrupt_hash = {}
     parse_main_text(corrupt_hash)
     @corrupt_chars = CorruptCharacterList.new(all_characters: corrupt_hash.values.sort.reverse!)
+    @corrupt_chars.find_glyphs(@original_chapter_id, @glyphs)
+
     @possible_replacements = @possible_chars.select { |_, value| (value[1]).zero? }.keys
     @parsed = true
   end
@@ -80,6 +84,7 @@ class CorruptChapter
 
   def init_chapter
     finalize_text
+    update_glyphs
     register_occurrences
     chapter = Chapter.new(book_id:, ch_number:, og_subtitle: subtitle,
                           og_title: title)
@@ -125,6 +130,27 @@ class CorruptChapter
     book = Book.includes(character_occurrences: :character).find(book_id)
     book_occurrences = book.character_occurrences.sort.reverse!
     @possible_chars = book_occurrences.to_h { |occurrence| [occurrence.character.character, [occurrence.id, 0]] }
+    @glyphs = book_occurrences.to_h do |occurrence|
+      [occurrence.character.glyph_md5, occurrence.character.character]
+    end
+  end
+
+  def update_glyphs
+    chars = @corrupt_chars.index_by(&:correct_char)
+    
+    Character.where(character: chars.keys).find_each do |character|
+      char = chars[character.character]
+      if char.glyph_md5.present?
+        if character.glyph_md5.blank?
+          character.glyph_md5 = char.glyph_md5
+          character.save
+        elsif character.glyph_md5 != char.glyph_md5
+          Rails.logger.info("updated glyph for #{character}")
+          character.glyph_md5 = char.glyph_md5
+          character.save
+        end
+      end
+    end
   end
 
   def finalize_text

@@ -144,7 +144,7 @@ class BooksController < ApplicationController
     inner_params = params.require(:book).permit(:tl_title, :og_title, :description, :short_name,
                                                 :jjwxc_id, :original_status, :translation_status,
                                                 :last_chapter, :og_description)
-    inner_params[:tl_title] = inner_params[:tl_title]&.squish
+    inner_params[:tl_title] = inner_params[:tl_title]&.squish || "JJWXC Novel #{inner_params[:jjwxc_id]}"
     inner_params[:author_id] = @author.id
     inner_params[:short_name] = generate_short_name(
       inner_params[:tl_title],

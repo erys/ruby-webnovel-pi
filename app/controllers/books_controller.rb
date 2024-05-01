@@ -22,6 +22,8 @@ class BooksController < ApplicationController
   before_action :find_jjwxc_book, only: %i[update_api status]
   before_action :sort_chapters, only: %i[show backup]
 
+  skip_before_action :verify_authenticity_token, only: %i[update_api create_api]
+
   def index
     @books = Book.all.sort
     @page_title = 'erys\'s danmei library'

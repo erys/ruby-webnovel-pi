@@ -66,7 +66,7 @@ class OriginalChaptersController < ApplicationController
 
     @corrupt_chapter = @original_chapter.as_corrupt_chapter
     @corrupt_chapter.parse
-    if @corrupt_chapter.corrupt_chars.all_guessed?
+    if @corrupt_chapter.corrupt_chars.all_guessed? || @corrupt_chapter.done?
       @corrupt_chapter.corrupt_chars.confirm_guesses
       @chapter = @corrupt_chapter.init_chapter
       @chapter.save!

@@ -128,7 +128,7 @@ class BooksController < ApplicationController
 
   def author_params
     if params[:author].present?
-      params.require(:author).permit(:og_name, :jjwxc_id)
+      params.require(:author).permit(:og_name, :jjwxc_id).to_h.symbolize_keys
     else
       { og_name: params[:book][:author_cn_name] }
     end

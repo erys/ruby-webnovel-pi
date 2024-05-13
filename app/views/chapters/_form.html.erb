@@ -66,7 +66,7 @@
         <div class="btn-group" role="group" aria-label="save buttons">
           <%= form.submit 'Save', class: 'form-control btn btn-success pe-2', name: 'save' %>
           <%= form.submit '& continue', class: 'form-control btn btn-primary px-2', name: 'save' %>
-          <%= form.submit '& ' + (@next.present? ? 'edit next' : 'clean'), class: 'form-control btn btn-info ps-2', name: 'save' %>
+          <%= form.submit '& next', class: 'form-control btn btn-info ps-2', name: 'save' %>
         </div>
       <% end %>
     </div>

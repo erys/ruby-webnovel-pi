@@ -25,6 +25,7 @@ class CorruptChapterParts
   def initialize(attributes = {})
     og_text = attributes.delete(:og_text)
     super
+    puts @footnote
     # for copy/paste creation
     if og_text.present?
       parse_og_text(og_text)

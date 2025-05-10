@@ -20,6 +20,12 @@ class ChaptersController < ApplicationController
   # def delete
   # end
 
+  def destroy
+    init_chapters
+    @chapter.destroy
+    redirect_to book_path(@book), status: :see_other
+  end
+
   def edit
     init_chapters
   end

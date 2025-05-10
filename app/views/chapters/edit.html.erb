@@ -23,3 +23,8 @@
 
 <%= render 'form', chapter: @chapter, book: @book, local: true %>
 
+
+    <%= button_to "Delete Chapter", [@book, @chapter], method: :delete, class: "btn btn-danger", form: { data: {
+      turbo_confirm: "Are you sure you want to delete #{@book.tl_title} chapter #{@chapter.ch_number}?"
+    } } %>
+

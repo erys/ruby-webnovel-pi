@@ -25,13 +25,13 @@ class CorruptChapterParts
   def initialize(attributes = {})
     og_text = attributes.delete(:og_text)
     super
-    puts @footnote
     # for copy/paste creation
     if og_text.present?
       parse_og_text(og_text)
     else
       main_text.gsub!(JJWXC_TEXT, '') if main_text.present?
       footnote.gsub!(ACK_REGEX, "\\1\n[truncated]\n#{ACK_END}") if footnote.present?
+      puts @footnote
     end
   end
 

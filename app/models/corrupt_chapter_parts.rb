@@ -31,7 +31,6 @@ class CorruptChapterParts
     else
       main_text.gsub!(JJWXC_TEXT, '') if main_text.present?
       footnote.gsub!(ACK_REGEX, "\\1\n[truncated]\n#{ACK_END}") if footnote.present?
-      puts @footnote
     end
   end
 
